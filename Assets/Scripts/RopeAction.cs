@@ -15,6 +15,19 @@ public class RopeAction : MonoBehaviour
     public bool isGrappling = false;
     public Vector3 grapplePoint;
 
+    public Transform player;
+    public float spring = 4.5f;
+    public float damper = 7.0f;
+    public float massScale = 1.0f;
+    public float ropeMinDistanse = 0.25f;
+
+    public SpringJoint springJoint;
+    public Rigidbody playerRigidbody;
+
+    //당기기 기능
+    public float pullForce = 1000.0f;
+    public float pullSpeed = 20f;
+
     void Start()
     {
         playerCamera = Camera.main;                                               //메인 카메라를 할당한다.
@@ -38,10 +51,22 @@ public class RopeAction : MonoBehaviour
         {
             StartGrapple();
         }
+
+        if (Input.GetMouseButton(1) && isGrappling)             //우클릭으로 당기기
+        {
+            PulltowrdsGrapplePoint();
+        }
+
+        if (isGrappling)
+        {
+            DrawRope();
+        }
     }
 
     void StartGrapple()
     {
+        if (isGrappling) return;                           //이미 그래플링 중이면 리턴
+        
         Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
 
         if(Physics.Raycast(ray, out hit, maxGrappleDistanse, grapplingObj))
@@ -53,6 +78,21 @@ public class RopeAction : MonoBehaviour
             lineRenderer.positionCount = 2;
             lineRenderer.SetPosition(0, transform.position);                     //플레이어 위치
             lineRenderer.SetPosition(1, grapplePoint);                           //그래플 포인트
+
+            //스프링 조인트 생성
+            springJoint = player.gameObject.AddComponent<SpringJoint>();
+            springJoint.autoConfigureConnectedAnchor = false;
+            springJoint.connectedAnchor = grapplePoint;
+
+            //거리계산
+            float distance = Vector3.Distance(player.position, grapplePoint);
+
+            //스프링 조인트 설정
+            springJoint.maxDistance = distance * 0.8f;
+            springJoint.minDistance = distance * ropeMinDistanse;
+            springJoint.spring = spring;
+            springJoint.damper = damper;
+            springJoint.massScale = massScale;
         }
 
         if(isGrappling)
@@ -81,5 +121,29 @@ public class RopeAction : MonoBehaviour
 
         isGrappling = false;
         lineRenderer.positionCount = 0;
+
+        if (springJoint != null)                                   //스프링 조인트 제거
+        {
+            Destroy(springJoint);
+            springJoint = null;
+        }
+    }
+
+    void PulltowrdsGrapplePoint()
+    {
+        if(!isGrappling || playerRigidbody == null) return;
+
+        //플레이어에서 그래플 포인트로의 방향 계산
+        Vector3 directionToGrapple = (grapplePoint - player.position).normalized;
+
+        //현재 속도와 목표 방향내의 내적으로 이미 그 방향으로 움직이고 있는지 확인
+        float currentVelocityInDirection = Vector3.Dot(playerRigidbody.velocity, directionToGrapple);
+
+        //최대 속도를 제한을 위한 계산
+        if(currentVelocityInDirection < pullSpeed)
+        {
+            Vector3 pullForceVector = directionToGrapple * pullForce * Time.deltaTime;
+            playerRigidbody.AddForce(pullForceVector, ForceMode.Force);
+        }
     }
 }
