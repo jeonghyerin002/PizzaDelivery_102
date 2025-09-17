@@ -122,6 +122,7 @@ public class ThirdPersonPlayerController : MonoBehaviour
         if(isDeliveryZone)
         {
             Debug.Log("상호작용 할 수 있습니다.");    //이후에 인벤토리 구현 후 배달 완료 확인
+            isDeliveryZone = false;
         }
     }
 }
