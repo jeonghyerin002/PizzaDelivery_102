@@ -545,22 +545,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fce4214bb3f92141b6fa9f49f0da5b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grapplingObj:
-    m_Bits: 128
-  maxGrappleDistanse: 100
-  playerCamera: {fileID: 330585545}
-  lineRenderer: {fileID: 0}
-  isGrappling: 0
-  grapplePoint: {x: 0, y: 0, z: 0}
-  player: {fileID: 1190113346}
-  spring: 4.5
-  damper: 7
-  massScale: 1
-  ropeMinDistanse: 0.25
-  springJoint: {fileID: 0}
-  playerRigidbody: {fileID: 1190113348}
-  pullForce: 1000
-  pullSpeed: 20
 --- !u!120 &126916807
 LineRenderer:
   serializedVersion: 2
@@ -1009,7 +993,7 @@ MonoBehaviour:
   height: 2
   rotationSpeed: 2
   smoothSpeed: 10
-  mouseSensitivity: 14.7
+  mouseSensitivity: 85.7
   minVerticalAngle: -30
   maxVerticalAngle: 60
   obstacleLayer:
@@ -5177,22 +5161,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fce4214bb3f92141b6fa9f49f0da5b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grapplingObj:
-    m_Bits: 128
-  maxGrappleDistanse: 100
-  playerCamera: {fileID: 330585545}
-  lineRenderer: {fileID: 0}
-  isGrappling: 0
-  grapplePoint: {x: 0, y: 0, z: 0}
-  player: {fileID: 1190113346}
-  spring: 4.5
-  damper: 7
-  massScale: 1
-  ropeMinDistanse: 0.25
-  springJoint: {fileID: 0}
-  playerRigidbody: {fileID: 1190113348}
-  pullForce: 1000
-  pullSpeed: 20
 --- !u!65 &1455102453
 BoxCollider:
   m_ObjectHideFlags: 0
