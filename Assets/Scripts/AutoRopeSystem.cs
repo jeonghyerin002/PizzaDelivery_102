@@ -19,7 +19,7 @@ public class AutoRopeSystem : MonoBehaviour
     public float damper = 7.0f;
     public float massScale = 1.0f;
     public float ropeMinDistance = 0.25f;
-    public float pullForce = 1000f;            // 플레이어 당기기 힘
+    public float pullForce = 2000f;            // 플레이어 당기기 힘 (당기면 빙글빙글 돔. 아마 그래플포인트 때문인듯) 
     public float pullSpeed = 20f;              // 플레이어 당기기 최대 속도
     public float swingForce = 500f;            // 스윙 보조 힘
 
