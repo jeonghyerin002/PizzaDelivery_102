@@ -58,6 +58,7 @@ public class ThirdPersonPlayerController : MonoBehaviour
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            Debug.Log("점프");
         }
 
         //건물 옥상 배달 상호작용

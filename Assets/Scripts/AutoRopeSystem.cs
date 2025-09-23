@@ -125,7 +125,7 @@ public class AutoRopeSystem : MonoBehaviour
             UpdateRope();
 
             // Shift로 당기기
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetMouseButton(1))
                 PullTowardsGrapplePoint();
 
             // A, D로 스윙 보조
