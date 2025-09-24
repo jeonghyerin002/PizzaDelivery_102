@@ -57,7 +57,7 @@ public class ThirdPersonCamera : MonoBehaviour
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
         currentX += mouseX;
-        currentY -= mouseY;
+        currentY += mouseY;
 
         // 수직 각도 제한
         currentY = Mathf.Clamp(currentY, minVerticalAngle, maxVerticalAngle);

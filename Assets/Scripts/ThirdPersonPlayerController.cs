@@ -26,8 +26,28 @@ public class ThirdPersonPlayerController : MonoBehaviour
     private bool isGrounded;
     private float turnSmoothVelocity;
 
+    [Header("Cinemachine")]
+    public GameObject CinemachineCameraTarget;
+
+    // cinemachine
+    private float _cinemachineTargetYaw;
+    private float _cinemachineTargetPitch;
+
+    public float mouseSensitivity = 1.0f;
+
+    public float BottomClamp = -30f;
+    public float TopClamp = 70f;
+    public float CameraAngleOverride = 0f;
+
+
+
     void Start()
     {
+        _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+
+        // 마우스 커서 잠그기
+        Cursor.lockState = CursorLockMode.Locked;
+
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
@@ -96,6 +116,41 @@ public class ThirdPersonPlayerController : MonoBehaviour
             horizontalVelocity = horizontalVelocity.normalized * moveSpeed;
             rb.velocity = new Vector3(horizontalVelocity.x, rb.velocity.y, horizontalVelocity.z);
         }
+    }
+
+    private void LateUpdate()
+    {
+        CameraRotation();
+    }
+
+    private void CameraRotation()
+    {
+        // if there is an input and camera position is not fixed
+       
+        // 마우스 입력 받기 (구 Input Manager 방식)
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+
+        _cinemachineTargetYaw += mouseX;
+        _cinemachineTargetPitch -= mouseY;
+
+        // clamp our rotations so our values are limited 360 degrees
+        _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
+        _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
+
+        // Cinemachine will follow this target
+        CinemachineCameraTarget.transform.rotation = Quaternion.Euler(
+            _cinemachineTargetPitch + CameraAngleOverride,
+            _cinemachineTargetYaw,
+            0.0f
+        );
+    }
+
+    private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
+    {
+        if (lfAngle < -360f) lfAngle += 360f;
+        if (lfAngle > 360f) lfAngle -= 360f;
+        return Mathf.Clamp(lfAngle, lfMin, lfMax);
     }
 
     // 디버그용 기즈모
