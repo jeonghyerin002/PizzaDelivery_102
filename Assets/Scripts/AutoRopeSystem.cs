@@ -9,8 +9,8 @@ public class AutoRopeSystem : MonoBehaviour
     public Transform ropeTip;                  // 로프가 나가는 위치 (손, 무기 등)
 
     [Header("로프 설정")]
-    public LayerMask grapplingLayer = 1;       // 그래플 가능한 오브젝트 레이어
-    public float maxGrappleDistance = 20f;     // 최대 그래플 거리
+    public LayerMask grapplingLayer = ~0;       // 그래플 가능한 오브젝트 레이어 / 모든 레이어에서 작동 가능하도록
+    public float maxGrappleDistance = 50f;     // 최대 그래플 거리
     public float detectionRadius = 15f;        // 탐지 반경
     public float ropeThickness = 0.1f;         // 로프 두께
 
@@ -77,7 +77,7 @@ public class AutoRopeSystem : MonoBehaviour
         SetupLineRenderer();
 
         // 주기적으로 주변 타겟 검색
-        InvokeRepeating("FindNearbyTargets", 0f, 0.5f);
+        //InvokeRepeating("FindNearbyTargets", 0f, 0.5f);
     }
 
     void SetupLineRenderer()
@@ -99,7 +99,7 @@ public class AutoRopeSystem : MonoBehaviour
     void Update()
     {
         // 주변 타겟 찾기 및 최적 타겟 선택
-        FindBestTarget();
+        //FindBestTarget();
 
         // 왼쪽 마우스로 로프 발사/해제
         if (Input.GetMouseButtonDown(0))
@@ -139,102 +139,133 @@ public class AutoRopeSystem : MonoBehaviour
         }
     }
 
-    void FindNearbyTargets()
-    {
-        nearbyTargets.Clear();
+    //void FindNearbyTargets()
+    //{
+    //    nearbyTargets.Clear();
 
-        Vector3 searchPosition = GetRopeStartPosition();
-        Collider[] colliders = Physics.OverlapSphere(searchPosition, detectionRadius, grapplingLayer);
+    //    Vector3 searchPosition = GetRopeStartPosition();
+    //    Collider[] colliders = Physics.OverlapSphere(searchPosition, detectionRadius, grapplingLayer);
 
-        foreach (Collider col in colliders)
-        {
-            if (col.gameObject != gameObject && (playerTransform == null || col.gameObject != playerTransform.gameObject))
-            {
-                nearbyTargets.Add(col.gameObject);
-            }
-        }
-    }
+    //    foreach (Collider col in colliders)
+    //    {
+    //        if (col.gameObject != gameObject && (playerTransform == null || col.gameObject != playerTransform.gameObject))
+    //        {
+    //            nearbyTargets.Add(col.gameObject);
+    //        }
+    //    }
+    //}
 
-    void FindBestTarget()
-    {
-        if (nearbyTargets.Count == 0 || playerTransform == null)
-        {
-            bestTarget = null;
-            return;
-        }
+    //void FindBestTarget()
+    //{
+    //    if (nearbyTargets.Count == 0 || playerTransform == null)
+    //    {
+    //        bestTarget = null;
+    //        return;
+    //    }
 
-        Transform closest = null;
-        float closestDistance = Mathf.Infinity;
-        Vector3 ropeStartPos = GetRopeStartPosition();
-        Vector3 cameraForward = playerCamera.transform.forward;
+    //    Transform closest = null;
+    //    float closestDistance = Mathf.Infinity;
+    //    Vector3 ropeStartPos = GetRopeStartPosition();
+    //    Vector3 cameraForward = playerCamera.transform.forward;
 
-        foreach (GameObject target in nearbyTargets)
-        {
-            if (target == null) continue;
+    //    foreach (GameObject target in nearbyTargets)
+    //    {
+    //        if (target == null) continue;
 
-            Vector3 directionToTarget = target.transform.position - ropeStartPos;
-            float distance = directionToTarget.magnitude;
+    //        Vector3 directionToTarget = target.transform.position - ropeStartPos;
+    //        float distance = directionToTarget.magnitude;
 
-            // 거리 제한 확인
-            if (distance > maxGrappleDistance) continue;
+    //        // 거리 제한 확인
+    //        if (distance > maxGrappleDistance) continue;
 
-            // 카메라 방향과의 각도 고려
-            float angle = Vector3.Angle(cameraForward, directionToTarget.normalized);
-            if (angle > 90f) continue;
+    //        // 카메라 방향과의 각도 고려
+    //        float angle = Vector3.Angle(cameraForward, directionToTarget.normalized);
+    //        if (angle > 90f) continue;
 
-            // 플레이어보다 위에 있는 타겟 우선
-            float heightDifference = target.transform.position.y - ropeStartPos.y;
-            if (heightDifference < -2f) continue;
+    //        // 플레이어보다 위에 있는 타겟 우선
+    //        float heightDifference = target.transform.position.y - ropeStartPos.y;
+    //        if (heightDifference < -2f) continue;
 
-            // 장애물 검사
-            RaycastHit hit;
-            if (Physics.Raycast(ropeStartPos, directionToTarget.normalized, out hit, distance, grapplingLayer))
-            {
-                if (hit.collider.gameObject == target)
-                {
-                    // 거리와 각도를 종합한 점수 계산
-                    float score = distance - (heightDifference * 0.5f) + (angle * 0.1f);
+    //        // 장애물 검사
+    //        RaycastHit hit;
+    //        if (Physics.Raycast(ropeStartPos, directionToTarget.normalized, out hit, distance, grapplingLayer))
+    //        {
+    //            if (hit.collider.gameObject == target)
+    //            {
+    //                // 거리와 각도를 종합한 점수 계산
+    //                float score = distance - (heightDifference * 0.5f) + (angle * 0.1f);
 
-                    if (score < closestDistance)
-                    {
-                        closestDistance = score;
-                        closest = target.transform;
-                    }
-                }
-            }
-        }
+    //                if (score < closestDistance)
+    //                {
+    //                    closestDistance = score;
+    //                    closest = target.transform;
+    //                }
+    //            }
+    //        }
+    //    }
 
-        bestTarget = closest;
-    }
+    //    bestTarget = closest;
+    //}
 
     void StartAutoGrapple()
     {
-        if (bestTarget == null) return;
+        Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
+        RaycastHit hit;
 
-        grapplePoint = bestTarget.position;
-        isGrappling = true;
-        currentTarget = bestTarget.gameObject;
-
-        // 로프 라인 그리기 시작
-        lineRenderer.positionCount = 2;
-
-        // 플레이어의 Rigidbody에 SpringJoint 생성
-        if (playerTransform != null && playerRigidbody != null)
+        if(Physics.Raycast(ray, out hit, maxGrappleDistance, grapplingLayer))
         {
-            springJoint = playerTransform.gameObject.AddComponent<SpringJoint>();
-            springJoint.autoConfigureConnectedAnchor = false;
-            springJoint.connectedAnchor = grapplePoint;
+            grapplePoint = hit.point;
+            isGrappling = true;
 
-            // 거리 계산 및 SpringJoint 설정
-            float distance = Vector3.Distance(playerTransform.position, grapplePoint);
-            springJoint.maxDistance = distance * 0.8f;
-            springJoint.minDistance = distance * ropeMinDistance;
-            springJoint.spring = spring;
-            springJoint.damper = damper;
-            springJoint.massScale = massScale;
+            lineRenderer.positionCount = 2;
 
-            Debug.Log("로프 발사! 타겟: " + currentTarget.name + ", 거리: " + distance.ToString("F1") + "m");
+            if(playerTransform != null && playerRigidbody != null)
+            {
+                springJoint = playerTransform.gameObject.AddComponent<SpringJoint>();
+                springJoint.autoConfigureConnectedAnchor = false;
+                springJoint.connectedAnchor = grapplePoint;
+
+                float distance = Vector3.Distance(playerTransform.position, grapplePoint);
+                springJoint.maxDistance = distance * 0.8f;
+                springJoint.minDistance = distance * ropeMinDistance;
+                springJoint.spring = spring;
+                springJoint.damper = damper;
+                springJoint.massScale = massScale;
+
+                Debug.Log("조줌점 그랩 성공! 위치: " + grapplePoint + "거리: " + distance.ToString("F1") + "m");
+            }
+            
         }
+        else
+        {
+            Debug.Log("조준점 그랩 실패 - 해당 방향에 그랩 가능한 오브젝트가 없습니다");
+        }
+        //if (bestTarget == null) return;
+
+        //grapplePoint = bestTarget.position;
+        //isGrappling = true;
+        //currentTarget = bestTarget.gameObject;
+
+        //// 로프 라인 그리기 시작
+        //lineRenderer.positionCount = 2;
+
+        //// 플레이어의 Rigidbody에 SpringJoint 생성
+        //if (playerTransform != null && playerRigidbody != null)
+        //{
+        //    springJoint = playerTransform.gameObject.AddComponent<SpringJoint>();
+        //    springJoint.autoConfigureConnectedAnchor = false;
+        //    springJoint.connectedAnchor = grapplePoint;
+
+        //    // 거리 계산 및 SpringJoint 설정
+        //    float distance = Vector3.Distance(playerTransform.position, grapplePoint);
+        //    springJoint.maxDistance = distance * 0.8f;
+        //    springJoint.minDistance = distance * ropeMinDistance;
+        //    springJoint.spring = spring;
+        //    springJoint.damper = damper;
+        //    springJoint.massScale = massScale;
+
+        //    Debug.Log("로프 발사! 타겟: " + currentTarget.name + ", 거리: " + distance.ToString("F1") + "m");
+        
     }
 
     void UpdateRope()
