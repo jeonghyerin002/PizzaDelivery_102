@@ -4799,8 +4799,8 @@ GameObject:
   - component: {fileID: 1190113346}
   - component: {fileID: 1190113345}
   - component: {fileID: 1190113348}
-  - component: {fileID: 1190113349}
   - component: {fileID: 1190113350}
+  - component: {fileID: 1190113351}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -4876,42 +4876,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &1190113349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1190113344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 122bb2e331e7fac4cbe2476c68324ddf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTransform: {fileID: 1190113346}
-  ropeTip: {fileID: 997349814}
-  grapplingLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  maxGrappleDistance: 30
-  detectionRadius: 15
-  ropeThickness: 0.1
-  spring: 4.5
-  damper: 7
-  massScale: 1
-  ropeMinDistance: 0.25
-  pullForce: 2000
-  pullSpeed: 20
-  swingForce: 500
-  objectPullForce: 800
-  objectPullRange: 15
-  pullableObjects:
-    serializedVersion: 2
-    m_Bits: 1
-  ropeMaterial: {fileID: 0}
-  ropeColor: {r: 1, g: 1, b: 1, a: 1}
-  objectPullColor: {r: 0, g: 1, b: 1, a: 1}
-  targetIndicatorColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &1190113350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4940,6 +4904,36 @@ MonoBehaviour:
   BottomClamp: -30
   TopClamp: 70
   CameraAngleOverride: 0
+--- !u!114 &1190113351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1190113344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60c3355e112808b4fb264c48bc9ebb4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTransform: {fileID: 1190113346}
+  ropeTip: {fileID: 1869536139}
+  playerCamera: {fileID: 1270367144}
+  grapplingLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  maxGrappleDistance: 50
+  upwardAngle: 15
+  ropeThickness: 0.1
+  spring: 4.5
+  damper: 7
+  massScale: 1
+  pullForce: 2000
+  pullSpeed: 20
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 193
+  groundCheckDistance: 0.5
 --- !u!1 &1194558700
 GameObject:
   m_ObjectHideFlags: 0
@@ -5077,6 +5071,12 @@ Transform:
   - {fileID: 936821130}
   m_Father: {fileID: 834673020}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &1270367144 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 8944336655422409496, guid: f6d148d888ffbf54b9afe9936dfaec1f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1116181239}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1315842369
 GameObject:
   m_ObjectHideFlags: 0
