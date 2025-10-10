@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf12e2ef445bee142958979dd9cc904f, type: 3}
   m_Name: New Store 3
   m_EditorClassIdentifier: 
-  StoreName: "\uCD08\uBC25\uAC00\uAC8C"
-  storeType: 0
+  questName: "\uD53C\uC790"
+  difficulty: 0
+  reward: 10
+  timeLimit: 10
