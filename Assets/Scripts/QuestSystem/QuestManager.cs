@@ -94,7 +94,7 @@ public class QuestManager : MonoBehaviour
         if (questToComplete != null)
         {
             Debug.Log($"'{questToComplete.data.questName}' 퀘스트 완료! 보상: {questToComplete.data.reward}");
-            // 여기에 보상 지급 로직 추가 (예: PlayerStats.gold += questToComplete.data.reward;)
+            // 여기에 보상 지급 로직 추가
             activeQuests.Remove(questToComplete);
             onQuestStateChanged?.Invoke(); // UI 업데이트 알림
         }
