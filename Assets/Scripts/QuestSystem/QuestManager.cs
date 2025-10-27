@@ -53,6 +53,8 @@ public class QuestManager : MonoBehaviour
 
     private void Update()
     {
+        if(PauseMenu.isPaused) return;      //게임 일시정지 상태면 return
+
         // 활성화된 퀘스트들의 시간 감소 처리
         for (int i = activeQuests.Count - 1; i >= 0; i--)
         {

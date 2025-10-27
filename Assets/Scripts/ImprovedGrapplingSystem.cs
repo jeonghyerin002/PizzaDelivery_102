@@ -52,6 +52,8 @@ public class ImprovedGrapplingSystem : MonoBehaviour
 
     void Update()
     {
+        if (PauseMenu.isPaused) return;      //게임 일시정지 상태면 return
+
         if (Input.GetMouseButtonDown(0))
         {
             Debug.Log("Mouse Clicked!");

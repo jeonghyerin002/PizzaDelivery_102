@@ -98,6 +98,8 @@ public class AutoRopeSystem : MonoBehaviour
 
     void Update()
     {
+        if(PauseMenu.isPaused) return;      //게임 일시정지 상태면 return
+
         // 주변 타겟 찾기 및 최적 타겟 선택
         //FindBestTarget();
 

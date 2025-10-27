@@ -76,6 +76,7 @@ public class ThirdPersonPlayerController : MonoBehaviour
 
     void Update()
     {
+        if (PauseMenu.isPaused) return;     //게임 일시정지 상태면 return
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
@@ -106,6 +107,8 @@ public class ThirdPersonPlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (PauseMenu.isPaused) return;     //게임 일시정지 상태면 return
+
         if (grapplingSystem != null && grapplingSystem.IsGrappling())
         {
             return;

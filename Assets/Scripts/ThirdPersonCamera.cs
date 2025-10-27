@@ -50,6 +50,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
     void LateUpdate()
     {
+        if (PauseMenu.isPaused) return;     //게임 일시정지 상태면 return
         if (target == null) return;
 
         // 마우스 입력
