@@ -39,14 +39,19 @@ public class ThirdPersonPlayerController : MonoBehaviour
     private float _cinemachineTargetYaw;
     private float _cinemachineTargetPitch;
 
-    public float mouseSensitivity = 1.0f;
+    public float mouseSensitivity = 0.3f;
 
     public float BottomClamp = -30f;
     public float TopClamp = 70f;
     public float CameraAngleOverride = 0f;
 
+    //감도 불러오기
+    private const string SensitivityKey = "MouseSensitivity";
+    private float defaultSensitivity = 0.3f;
+
     void Start()
     {
+
         _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -54,6 +59,7 @@ public class ThirdPersonPlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
+        mouseSensitivity = PlayerPrefs.GetFloat(SensitivityKey, defaultSensitivity);        //감도 불러온 값 저장
 
         grapplingSystem = GetComponent<ImprovedGrapplingSystem>();
 

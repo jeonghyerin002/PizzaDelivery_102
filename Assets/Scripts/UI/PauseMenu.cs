@@ -8,6 +8,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenu;
     public static bool isPaused;
     public GameObject crossHair;
+    public GameObject Setting;
 
     private void Start()
     {
@@ -46,11 +47,13 @@ public class PauseMenu : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         crossHair.SetActive(true);
+        Setting.SetActive(false);
     }
     public void GoToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Title_UI");
+        isPaused = false;
+        SceneManager.LoadScene("TitleScene");
     }
 
     public void QuitGame()
