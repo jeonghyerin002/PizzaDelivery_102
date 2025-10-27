@@ -7,7 +7,9 @@ public class ThirdPersonPlayerController : MonoBehaviour
     [Header("이동 설정")]
     public float moveSpeed = 10f;
     public float jumpForce = 15f;
+    public float runSpeed = 14f;
     public float turnSmoothTime = 0.1f;
+    private float currentSpeed;
 
     [Header("땅 체크")]
     public Transform groundCheck;
@@ -21,9 +23,13 @@ public class ThirdPersonPlayerController : MonoBehaviour
     public GameObject deliveryZone;
     public bool isDeliveryZone = false;
 
+    [Header("컴포넌트")]
+    public Animator animator;
+
     private Rigidbody rb;
     private bool isGrounded;
     private float turnSmoothVelocity;
+    private CharacterController controller;
 
     private ImprovedGrapplingSystem grapplingSystem;
 
@@ -48,7 +54,9 @@ public class ThirdPersonPlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
+
         grapplingSystem = GetComponent<ImprovedGrapplingSystem>();
+
 
         if (groundCheck == null)
         {
@@ -70,12 +78,30 @@ public class ThirdPersonPlayerController : MonoBehaviour
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
 
         DeliveryZone();
+        if(Input.GetKey(KeyCode.LeftShift))
+        {
+            currentSpeed = runSpeed;
+        }
+        else
+        {
+            currentSpeed = moveSpeed;
+        }
+        
+       
+
+        //UpdateAnimator();
+
+    }
+    void UpdateAnimator()
+    {
+        float animatorSpeed = Mathf.Clamp01(currentSpeed / runSpeed);
+        animator.SetFloat("speed", animatorSpeed);
     }
 
     void FixedUpdate()
@@ -99,7 +125,23 @@ public class ThirdPersonPlayerController : MonoBehaviour
 
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 
-            rb.AddForce(moveDir.normalized * moveSpeed, ForceMode.Force);
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                rb.AddForce(moveDir.normalized * runSpeed, ForceMode.Force);
+
+                animator.SetFloat("speed", runSpeed);
+            }
+            else
+            {
+                rb.AddForce(moveDir.normalized * moveSpeed, ForceMode.Force);
+
+                animator.SetFloat("speed", moveSpeed);
+            }
+                
+        }
+        else
+        {
+            animator.SetFloat("speed", 0);
         }
 
         Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
@@ -109,6 +151,7 @@ public class ThirdPersonPlayerController : MonoBehaviour
             rb.velocity = new Vector3(horizontalVelocity.x, rb.velocity.y, horizontalVelocity.z);
         }
     }
+    
 
     private void LateUpdate()
     {
