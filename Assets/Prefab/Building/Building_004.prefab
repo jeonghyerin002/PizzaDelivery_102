@@ -103,6 +103,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building004(1) (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 007ffc26c4fd1754a86fc65d794ff3b6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 007ffc26c4fd1754a86fc65d794ff3b6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -237,6 +247,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Building004(2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 31996e9cb370320488596821f2bf4bab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 31996e9cb370320488596821f2bf4bab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -373,6 +393,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building004(1) (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 007ffc26c4fd1754a86fc65d794ff3b6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 007ffc26c4fd1754a86fc65d794ff3b6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -507,6 +537,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Building004(1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 007ffc26c4fd1754a86fc65d794ff3b6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 007ffc26c4fd1754a86fc65d794ff3b6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
