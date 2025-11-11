@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class SensitivityManager : MonoBehaviour
 {
-    public ThirdPersonPlayerController playerController;
+    public PlayerController playerController;
     public Slider sensitivitySlider;
 
     private const string SensitivityKey = "MouseSensitivity";
