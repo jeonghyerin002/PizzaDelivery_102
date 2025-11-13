@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public Transform cameraTransform;
     public Transform groundCheck;     // 지상 체크 기준점
     public LayerMask groundLayer;     // "Ground" 레이어
+    public Animator animator;
 
     [Header("지상 움직임 설정")]
     public float moveSpeed = 10f;       // 지상 이동 속도
@@ -25,6 +26,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private float horizontalInput;
     private float verticalInput;
+    private bool wasGrounded;
+    private Swinging swinging;
 
     [Header("Cinemachine")]
     public GameObject CinemachineCameraTarget;
@@ -45,6 +48,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        swinging = GetComponent<Swinging>();
+        animator = GetComponentInChildren<Animator>();
         _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -74,6 +79,8 @@ public class PlayerController : MonoBehaviour
 
     private void CameraRotation()
     {
+        if (PauseMenu.isPaused) return;     //게임 일시정지 상태면 return
+
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
@@ -106,6 +113,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
+            animator.SetTrigger("Jump");
             Jump();
         }
 
@@ -145,10 +153,21 @@ public class PlayerController : MonoBehaviour
 
         Vector3 moveDirection = (cameraForward * verticalInput + cameraRight * horizontalInput).normalized;
 
+        animator.SetBool("isGrounded", isGrounded);
+
+        float horizontalSpeed = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
+        animator.SetFloat("moveSpeed", horizontalSpeed);
+
         // 지상일 때 이동
         if (isGrounded)
         {
             rb.drag = 1f;
+
+            if(!wasGrounded)
+            {
+                animator.SetTrigger("Land");
+            }
+
             rb.AddForce(moveDirection * moveSpeed, ForceMode.Acceleration);
         }
         else
@@ -179,7 +198,7 @@ public class PlayerController : MonoBehaviour
                 rb.velocity = new Vector3(0f, v.y, 0f);
         }
 
-
+        wasGrounded = isGrounded;
     }
 
 }

@@ -8,6 +8,9 @@ public class Swinging : MonoBehaviour
     public PlayerController playerController;           //PlayerController 참조
     public Transform hand;
 
+    [HideInInspector]
+    public bool isSwinging = false;
+
     [Header("스윙 설정")]
     public float maxSwingDistance = 50f; // 최대 스윙 거리
     public float swingSpring = 100f;     // 스프링 탄성 (높을수록 뻣뻣함)
@@ -19,6 +22,7 @@ public class Swinging : MonoBehaviour
     [Header("공중 컨트롤")]
     public float airControlForce = 10f; // 스윙 중 공중 컨트롤 힘
     public float swingReleaseBoost = 5f; // 스윙을 끊을 때 추가할 힘
+    public float backFlipSpeed = 20f;
 
     private Rigidbody playerRigidbody;
     private SpringJoint springJoint;
@@ -98,6 +102,8 @@ public class Swinging : MonoBehaviour
         if (Physics.Raycast(playerController.mainCamera.transform.position, playerController.mainCamera.transform.forward, out hit, maxSwingDistance, swingableLayer))
         {
             swingPoint = hit.point; // 맞은 지점을 스윙 포인트로 저장
+            isSwinging = true;
+            playerController.animator.SetBool("isSwinging", true);
 
             // SpringJoint 컴포넌트 추가 및 설정
             springJoint = gameObject.AddComponent<SpringJoint>();
@@ -134,6 +140,17 @@ public class Swinging : MonoBehaviour
         {
             Destroy(springJoint);
             springJoint = null;
+            isSwinging = false;
+
+            float currentSpeed = playerRigidbody.velocity.magnitude;        //속도 확인
+            playerController.animator.SetBool("isSwinging", false);
+
+            if (currentSpeed > backFlipSpeed)
+            {
+                // 백플립 애니메이션 트리거 발동
+                playerController.animator.SetTrigger("backFlip");
+            }
+
             //스윙을 끊을때 부스트 적용
             playerRigidbody.AddForce(playerController.mainCamera.transform.forward * swingReleaseBoost, ForceMode.Impulse);
         }
