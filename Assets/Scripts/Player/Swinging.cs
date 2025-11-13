@@ -16,13 +16,13 @@ public class Swinging : MonoBehaviour
     public float swingSpring = 100f;     // 스프링 탄성 (높을수록 뻣뻣함)
     public float swingDamper = 10f;      // 스프링 저항 (진동을 줄임)
     public float swingMassScale = 4.5f;  // 조인트에 연결된 질량 스케일
-    public float swingRewind = 10f;
-    public float swingPull = 20f;
+    public float swingRewind = 10f;     //1초에 줄을 감을 값
+    public float swingPull = 20f;       //스윙 추진력
 
     [Header("공중 컨트롤")]
     public float airControlForce = 10f; // 스윙 중 공중 컨트롤 힘
     public float swingReleaseBoost = 5f; // 스윙을 끊을 때 추가할 힘
-    public float backFlipSpeed = 20f;
+    public float backFlipSpeed = 20f;   //이 속도가 넘어가면 백플립
 
     private Rigidbody playerRigidbody;
     private SpringJoint springJoint;

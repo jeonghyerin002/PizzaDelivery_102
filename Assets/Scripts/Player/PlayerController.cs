@@ -50,11 +50,10 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         swinging = GetComponent<Swinging>();
         animator = GetComponentInChildren<Animator>();
+
         _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
         Cursor.lockState = CursorLockMode.Locked;
-
-        rb.freezeRotation = true;
 
         mouseSensitivity = PlayerPrefs.GetFloat(SensitivityKey, defaultSensitivity);
 
@@ -166,6 +165,12 @@ public class PlayerController : MonoBehaviour
             if(!wasGrounded)
             {
                 animator.SetTrigger("Land");
+
+                // 즉시 회전 리셋 및 고정
+                rb.angularVelocity = Vector3.zero; // 남은 회전 제거
+                var e = transform.eulerAngles;
+                transform.rotation = Quaternion.Euler(0f, e.y, 0f); // 기울기 즉시 리셋
+                rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             }
 
             rb.AddForce(moveDirection * moveSpeed, ForceMode.Acceleration);
@@ -173,10 +178,17 @@ public class PlayerController : MonoBehaviour
         else
         {
             rb.drag = 0f;
+
+            if (wasGrounded)
+            {
+                rb.angularDrag = 2f; // 공중 회전 저항
+            }
+
+            rb.constraints = RigidbodyConstraints.FreezeRotationY;
         }
 
-        //이동 입력이 있을 때만 회전
-        if (moveDirection.sqrMagnitude > 0.01f)
+        //스윙중이 아니고 플레이어가 회전한다면
+        if (!swinging.isSwinging && moveDirection.sqrMagnitude > 0.01f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * rotationSpeed);
