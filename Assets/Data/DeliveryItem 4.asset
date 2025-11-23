@@ -17,4 +17,4 @@ MonoBehaviour:
   pickupTimeLimit: 60
   deliveryTimeLimit: 60
   reward: 100
-  difficulty: 2
+  difficulty: 1
