@@ -39,6 +39,7 @@ public class Swinging : MonoBehaviour
     void Update()
     {
         if (PauseMenu.isPaused) return;      //게임 일시정지 상태면 return
+        if (PhoneOnOff.isPhone) return;     //휴대폰이 켜지면 return
         // 마우스 왼쪽 버튼 클릭 시 스윙 시작
         if (Input.GetMouseButtonDown(0))
         {

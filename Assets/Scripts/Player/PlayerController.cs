@@ -79,9 +79,14 @@ public class PlayerController : MonoBehaviour
     private void CameraRotation()
     {
         if (PauseMenu.isPaused) return;     //게임 일시정지 상태면 return
+        float mouseX = 0f;
+        float mouseY = 0f;
 
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+        if (!PhoneOnOff.isPhone)
+        {
+            mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+            mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+        }
 
         _cinemachineTargetYaw += mouseX;
         _cinemachineTargetPitch -= mouseY;
@@ -106,7 +111,11 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (PauseMenu.isPaused) return;     //게임 일시정지 상태면 return
-
+        if (PhoneOnOff.isPhone)
+        {
+            rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+            return;
+        }
         horizontalInput = Input.GetAxis("Horizontal"); // A, D
         verticalInput = Input.GetAxis("Vertical");     // W, S
 

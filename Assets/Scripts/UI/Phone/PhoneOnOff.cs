@@ -8,7 +8,7 @@ public class PhoneOnOff : MonoBehaviour
     public float finalAnchorY = 0f;
     public float startAnchorY = -1000f;
 
-    public bool isPhone = false;
+    public static bool isPhone = false;
 
     void Start()
     {
@@ -17,22 +17,34 @@ public class PhoneOnOff : MonoBehaviour
         panelRectTransform.anchoredPosition = new Vector2(panelRectTransform.anchoredPosition.x, startAnchorY);
         isPhone = false;
     }
-
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
+
+        bool isMoving = h != 0 || v != 0;
+
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            if (!isPhone) ShowPanel();
+            if (!isPhone && !isMoving)
+            {
+                ShowPanel();
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            if (isPhone) HidePanel();
+            if (isPhone && !isMoving)
+            {
+                HidePanel();
+            }
         }
     }
 
     public void ShowPanel()
     {
+        Cursor.lockState = CursorLockMode.None;
+
         isPhone = true;
         panelRectTransform.DOKill();
         panelRectTransform.DOAnchorPosY(finalAnchorY, 0.5f).SetEase(Ease.OutBack);
@@ -40,6 +52,8 @@ public class PhoneOnOff : MonoBehaviour
 
     public void HidePanel()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+
         isPhone = false;
         panelRectTransform.DOKill();
         panelRectTransform.DOAnchorPosY(startAnchorY, 0.5f).SetEase(Ease.InBack);
