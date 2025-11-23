@@ -11,6 +11,7 @@ public class ItemSO : ScriptableObject
     public float Timer;
 
     public bool isUsable = false;
+    public int healAmount = 0;
 
     public enum Item
     { 

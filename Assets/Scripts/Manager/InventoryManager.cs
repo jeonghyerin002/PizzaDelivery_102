@@ -26,13 +26,17 @@ public class InventoryManager : MonoBehaviour
     }
     void Start()
     {
-        
+        CreateInventorySlots();
+        inventoryUI.SetActive(false);
     }
 
 
     void Update()
     {
-        
+        if(Input.GetKeyDown(inventoryKey))
+        {
+            ToggleInventory();
+        }
     }
     void CreateInventorySlots()
     {

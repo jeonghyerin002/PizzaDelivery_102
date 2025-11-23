@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,12 +12,21 @@ public class InventorySlot : MonoBehaviour
 
     [Header("UI References")]
     public Image itemIcon;
-    public Text amountText;
+    public TextMeshProUGUI amountText;
     public GameObject emptySlotImage;
 
+    public Button slotButton;
     void Start()
     {
         UpdateSlotUI();
+        //slotButton.onClick.AddListener(OnSlotClick);
+    }
+    void OnSlotClick()
+    {
+        if(item != null)
+        {
+            ItemUsePopup.Instance.ShowPopup(item, this);
+        }
     }
 
 
