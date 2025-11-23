@@ -7,14 +7,19 @@ public enum QuestDifficulty
     Medium,
     Hard
 }
+public enum QuestState
+{
+    HeadingToPickup,
+    HeadingToDestination
+}
 
-[CreateAssetMenu(fileName = "New Store", menuName = "Pizza Game/Store")]
+[CreateAssetMenu(fileName = "New Store", menuName = "Pizza Game/DeliveryItem")]
 public class StoreSO : ScriptableObject
 {
-    [Header("퀘스트 기본 정보")]
-    public string questName;        // 퀘스트 이름
-    //public Sprite icon;             // UI에 표시될 아이콘
-    public QuestDifficulty difficulty; // 난이도
-    public int reward;              // 완료 시 보상 (골드 등)
-    public float timeLimit;         // 제한 시간 (초 단위)
+    public string questName;
+    public Sprite icon;          // 물품 사진
+    public float pickupTimeLimit; // 픽업하러 갈 때 제한 시간
+    public float deliveryTimeLimit; // 배달할 때 제한 시간
+    public int reward;
+    public QuestDifficulty difficulty;
 }

@@ -1,43 +1,97 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI; // TextMeshPro를 쓴다면 using TMPro;
+using TMPro;
+using UnityEngine.UI;
 
 public class QuestUIEntry : MonoBehaviour
 {
-    // 프리팹 내부의 UI 요소들을 연결할 변수
-    public TMP_Text questNameText;
-    public TMP_Text rewardText;
-    public TMP_Text timeLimitText;
-    //public Image questIcon;
-    public TMP_Text difficultyText;
+    public Image iconImage;
+    public TextMeshProUGUI titleText;
+    public TextMeshProUGUI statusText;
+    public TextMeshProUGUI timerText;
 
-    private ActiveQuest associatedQuest;
+    private ActiveQuest myQuest;
+    private QuestMarker myMarker;
 
-    // 퀘스트 데이터를 받아 UI를 채우는 함수
-    public void Setup(ActiveQuest quest)
+    public void Setup(ActiveQuest quest, GameObject markerPrefab, Transform markerParent)
     {
-        associatedQuest = quest;
-        questNameText.text = quest.data.questName;
-        rewardText.text = $"보상: {quest.data.reward} G";
-        //questIcon.sprite = quest.data.icon;
+        myQuest = quest;
 
-        // 난이도 텍스트 설정 (Enum을 문자열로 변환)
-        difficultyText.text = $"난이도: {quest.data.difficulty}";
+        if (iconImage != null) iconImage.sprite = quest.data.icon;
+        if (titleText != null) titleText.text = quest.data.questName;
 
-        UpdateTime();
+        // 마커 생성
+        if (markerPrefab != null && markerParent != null)
+        {
+            GameObject markerObj = Instantiate(markerPrefab, markerParent);
+            myMarker = markerObj.GetComponent<QuestMarker>();
+
+            if (myQuest.targetObject != null)
+            {
+                myMarker.ShowMarker(myQuest.targetObject.transform);
+            }
+        }
+
+        RefreshDisplay();
     }
 
-    // 남은 시간처럼 계속 변하는 값을 업데이트하는 함수
-    public void UpdateTime()
+    private void Update()
     {
-        if (associatedQuest != null)
+        if (myQuest == null) return;
+
+        UpdateTimerDisplay();
+        UpdateDistanceAndStatus();
+        UpdateMarkerTarget();
+    }
+
+    private void UpdateMarkerTarget()
+    {
+        // 마커가 없거나 퀘스트 목표가 없으면 리턴
+        if (myMarker == null || myQuest.targetObject == null) return;
+
+        if (myMarker.target != myQuest.targetObject.transform)
         {
-            timeLimitText.text = $"남은 시간: {(int)associatedQuest.remainingTime}초";
+            myMarker.ShowMarker(myQuest.targetObject.transform);
         }
     }
 
-    public ActiveQuest GetAssociatedQuest()
+    private void UpdateTimerDisplay()
     {
-        return associatedQuest;
+        int minutes = Mathf.FloorToInt(myQuest.remainingTime / 60F);
+        int seconds = Mathf.FloorToInt(myQuest.remainingTime % 60F);
+        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+        if (myQuest.remainingTime < 10f) timerText.color = Color.red;
+        else timerText.color = Color.white;
+    }
+
+    private void UpdateDistanceAndStatus()
+    {
+        if (myQuest.targetObject == null) return;
+
+        float distance = Vector3.Distance(QuestManager.instance.playerTransform.position, myQuest.targetObject.transform.position);
+
+        if (myQuest.state == QuestState.HeadingToPickup)
+        {
+            statusText.text = $"[픽업] {myQuest.targetObject.name}까지" +
+                $"{distance:F0}m";
+            statusText.color = Color.yellow;
+        }
+        else
+        {
+            statusText.text = $"[배달] {myQuest.targetObject.name}까지" +
+                $"{distance:F0}m";
+            statusText.color = Color.green;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (myMarker != null) Destroy(myMarker.gameObject);
+    }
+
+    public void RefreshDisplay()
+    {
+        UpdateTimerDisplay();
+        UpdateDistanceAndStatus();
     }
 }
