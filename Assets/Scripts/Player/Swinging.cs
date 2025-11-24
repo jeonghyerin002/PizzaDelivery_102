@@ -7,6 +7,7 @@ public class Swinging : MonoBehaviour
     public LayerMask swingableLayer; // 스윙 가능한 오브젝트의 레이어
     public PlayerController playerController;           //PlayerController 참조
     public Transform hand;
+    public StaminaSystem staminaSystem;
 
     [HideInInspector]
     public bool isSwinging = false;
@@ -18,6 +19,10 @@ public class Swinging : MonoBehaviour
     public float swingMassScale = 4.5f;  // 조인트에 연결된 질량 스케일
     public float swingRewind = 10f;     //1초에 줄을 감을 값
     public float swingPull = 20f;       //스윙 추진력
+
+    [Header("스테미나 설정")]
+    public float startSwingCost = 5f;  //스윙 시작 스테미나 소모량
+    public float swingPullStaminaCost = 5f;    //줄 감기 스테미나 소모량
 
     [Header("공중 컨트롤")]
     public float airControlForce = 10f; // 스윙 중 공중 컨트롤 힘
@@ -32,8 +37,8 @@ public class Swinging : MonoBehaviour
     {
         playerRigidbody = GetComponent<Rigidbody>();
         lineRenderer.enabled = false;
-
         playerController = GetComponent<PlayerController>();
+        staminaSystem = GetComponent<StaminaSystem>();
     }
 
     void Update()
@@ -79,13 +84,14 @@ public class Swinging : MonoBehaviour
         {
             if (springJoint != null)
             {
-                springJoint.maxDistance -= Time.fixedDeltaTime * swingRewind; // 1초에 swingRewind만큼 줄임
-                springJoint.maxDistance = Mathf.Max(springJoint.maxDistance, springJoint.minDistance);
+                if (staminaSystem.DrainStamina(swingPullStaminaCost * Time.fixedDeltaTime))
+                {
+                    springJoint.maxDistance -= Time.fixedDeltaTime * swingRewind;
+                    springJoint.maxDistance = Mathf.Max(springJoint.maxDistance, springJoint.minDistance);
 
-
-                Vector3 dirToPoint = (swingPoint - hand.position).normalized;
-                playerRigidbody.AddForce(dirToPoint * swingPull, ForceMode.Acceleration);
-
+                    Vector3 dirToPoint = (swingPoint - hand.position).normalized;
+                    playerRigidbody.AddForce(dirToPoint * swingPull, ForceMode.Acceleration);
+                }
             }
 
 
@@ -98,36 +104,45 @@ public class Swinging : MonoBehaviour
 
     void StartSwing()
     {
+        if (staminaSystem.currentStamina <= 0) return;      //스테미나 없으면 스윙 불가
         // 카메라 정면으로 Raycast 발사
         RaycastHit hit;
         if (Physics.Raycast(playerController.mainCamera.transform.position, playerController.mainCamera.transform.forward, out hit, maxSwingDistance, swingableLayer))
         {
-            swingPoint = hit.point; // 맞은 지점을 스윙 포인트로 저장
-            isSwinging = true;
-            playerController.animator.SetBool("isSwinging", true);
+            if (staminaSystem.DrainStamina(startSwingCost))
+            {
+                swingPoint = hit.point; // 맞은 지점을 스윙 포인트로 저장
+                isSwinging = true;
+                playerController.animator.SetBool("isSwinging", true);
 
-            // SpringJoint 컴포넌트 추가 및 설정
-            springJoint = gameObject.AddComponent<SpringJoint>();
-            springJoint.autoConfigureConnectedAnchor = false; // 연결 지점을 수동 설정
-            springJoint.connectedAnchor = swingPoint;         // 연결 지점은 Raycast가 맞은 곳
+                // SpringJoint 컴포넌트 추가 및 설정
+                springJoint = gameObject.AddComponent<SpringJoint>();
+                springJoint.autoConfigureConnectedAnchor = false; // 연결 지점을 수동 설정
+                springJoint.connectedAnchor = swingPoint;         // 연결 지점은 Raycast가 맞은 곳
 
-            // 플레이어와 스윙 포인트 사이의 거리를 계산
-            float distanceFromPoint = Vector3.Distance(hand.position, swingPoint);
-            springJoint.anchor = transform.InverseTransformPoint(hand.position); //조인트 시작점을 손으로
+                // 플레이어와 스윙 포인트 사이의 거리를 계산
+                float distanceFromPoint = Vector3.Distance(hand.position, swingPoint);
+                springJoint.anchor = transform.InverseTransformPoint(hand.position); //조인트 시작점을 손으로
 
-            // maxDistance를 현재 거리로 설정하여 줄이 팽팽하게 시작하도록 함
-            springJoint.maxDistance = distanceFromPoint * 0.9f; // 약간의 여유를 주어 당겨지는 느낌
-            springJoint.minDistance = distanceFromPoint * 0f; // 최소 거리
+                // maxDistance를 현재 거리로 설정하여 줄이 팽팽하게 시작하도록 함
+                springJoint.maxDistance = distanceFromPoint * 0.9f; // 약간의 여유를 주어 당겨지는 느낌
+                springJoint.minDistance = distanceFromPoint * 0f; // 최소 거리
 
-            // 스프링 값 설정
-            springJoint.spring = swingSpring;
-            springJoint.damper = swingDamper;
-            springJoint.massScale = swingMassScale;
+                // 스프링 값 설정
+                springJoint.spring = swingSpring;
+                springJoint.damper = swingDamper;
+                springJoint.massScale = swingMassScale;
 
-            // 라인 렌더러 활성화 및 위치 설정
-            lineRenderer.enabled = true;
-            lineRenderer.SetPosition(0, hand.position); // 시작점: 플레이어
-            lineRenderer.SetPosition(1, swingPoint);         // 끝점: 스윙 포인트
+                // 라인 렌더러 활성화 및 위치 설정
+                lineRenderer.enabled = true;
+                lineRenderer.SetPosition(0, hand.position); // 시작점: 플레이어
+                lineRenderer.SetPosition(1, swingPoint);         // 끝점: 스윙 포인트
+            }
+            else
+            {
+                Debug.Log("스테미나 부족");
+            }
+
         }
     }
 
