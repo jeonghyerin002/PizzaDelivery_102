@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheck;     // 지상 체크 기준점
     public LayerMask groundLayer;     // "Ground" 레이어
     public Animator animator;
+    public StaminaSystem staminaSystem;
 
     [Header("지상 움직임 설정")]
     public float moveSpeed = 10f;       // 지상 이동 속도
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public float groundDistance = 0.4f; // 감지할 거리 (원의 반지름)
     public float rotationSpeed = 10f;
     public float breakForce = 7f;
+    public float runStaminaCost = 15f;   //추가 달리기 스테미나 초당 소모량
 
     [HideInInspector]
     public bool isGrounded;
@@ -50,6 +52,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         swinging = GetComponent<Swinging>();
         animator = GetComponentInChildren<Animator>();
+        if (staminaSystem == null) staminaSystem = GetComponent<StaminaSystem>();
 
         _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
@@ -64,7 +67,7 @@ public class PlayerController : MonoBehaviour
             groundCheckObj.transform.localPosition = new Vector3(0, -1f, 0);
             groundCheck = groundCheckObj.transform;
         }
-                
+
         if (mainCamera == null)
         {
             mainCamera = Camera.main;
@@ -119,15 +122,27 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal"); // A, D
         verticalInput = Input.GetAxis("Vertical");     // W, S
 
+
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             animator.SetTrigger("Jump");
             Jump();
         }
 
-        if (Input.GetKey(KeyCode.LeftShift))
+        bool isTryingToRun = Input.GetKey(KeyCode.LeftShift) && (horizontalInput != 0 || verticalInput != 0);
+
+        if (isTryingToRun)
         {
-            moveSpeed = runSpeed;
+            // 스테미나를 소모 시도 (성공하면 true, 실패하면 false)
+            // Time.deltaTime을 곱해서 초당 소모량으로 계산
+            if (staminaSystem.DrainStamina(runStaminaCost * Time.deltaTime))
+            {
+                moveSpeed = runSpeed;
+            }
+            else
+            {
+                moveSpeed = walkSpeed;
+            }
         }
         else
         {
@@ -171,7 +186,7 @@ public class PlayerController : MonoBehaviour
         {
             rb.drag = 1f;
 
-            if(!wasGrounded)
+            if (!wasGrounded)
             {
                 animator.SetTrigger("Land");
 
