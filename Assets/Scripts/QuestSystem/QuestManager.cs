@@ -68,6 +68,7 @@ public class QuestManager : MonoBehaviour
             if (activeQuests[i].remainingTime <= 0)
             {
                 Debug.Log($"'{activeQuests[i].data.questName}' 퀘스트 시간 초과!");
+                myData.DeliveryFail++;
                 activeQuests.RemoveAt(i);
                 onQuestStateChanged?.Invoke(); // UI 업데이트 알림
             }
@@ -110,6 +111,7 @@ public class QuestManager : MonoBehaviour
         else if (quest.state == QuestState.HeadingToDestination)
         {
             // 배달 성공
+            myData.DeliveryDone++;
             Debug.Log($"배달 완료! 보상: {quest.data.reward}");
             activeQuests.Remove(quest);
         }
