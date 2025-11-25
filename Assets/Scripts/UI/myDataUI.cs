@@ -15,7 +15,6 @@ public class myDataUI : MonoBehaviour
 
     public void UpdateUI()
     {
-        Debug.Log("데이터 업데이트");
         deliveryDoneText.text = $"배달 완료: {myData.DeliveryDone}";
         deliveryFailText.text = $"배달 실패: {myData.DeliveryFail}";
     }

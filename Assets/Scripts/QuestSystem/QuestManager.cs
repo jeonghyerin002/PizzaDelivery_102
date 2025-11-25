@@ -112,6 +112,7 @@ public class QuestManager : MonoBehaviour
         {
             // 배달 성공
             myData.DeliveryDone++;
+            BadgeManager.Instance.CheckDeliverDone();
             Debug.Log($"배달 완료! 보상: {quest.data.reward}");
             activeQuests.Remove(quest);
         }

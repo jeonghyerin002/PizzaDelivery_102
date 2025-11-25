@@ -1,0 +1,82 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class BadgeManager : MonoBehaviour
+{
+    public static BadgeManager Instance;
+
+    [Header("πÓ¡ˆ µ•¿Ã≈Õ ∏ÆΩ∫∆Æ")]
+    public List<BadgeData> allBadges;
+
+    [Header("πÓ¡ˆ »πµÊ æÀ∏≤ ∆–≥Œ")]
+    public GameObject badgeNotificationPanel;
+    public Image badgeIconUI;
+    public TextMeshProUGUI badgeNameUI;
+    public TextMeshProUGUI badgeDescriptionUI;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void UnlockBadge(int badgeID)
+    {
+        // IDø° «ÿ¥Á«œ¥¬ πÓ¡ˆ µ•¿Ã≈Õ √£±‚
+        BadgeData badgeToUnlock = allBadges.Find(b => b.badgeID == badgeID);
+
+        if (badgeToUnlock != null && !IsBadgeUnlocked(badgeID))
+        {
+            // PlayerPrefsø° »πµÊ ¡§∫∏ ¿˙¿Â (Key: "Badge_ID", Value: 1)
+            PlayerPrefs.SetInt("Badge_" + badgeID, 1);
+            PlayerPrefs.Save();
+
+            Debug.Log($"πÓ¡ˆ »πµÊ! ID: {badgeID}, ¿Ã∏ß: {badgeToUnlock.badgeName}");
+
+            // »πµÊ æÀ∏≤ UI «•Ω√
+            ShowBadgeNotification(badgeToUnlock);
+        }
+    }
+
+    public bool IsBadgeUnlocked(int badgeID)
+    {
+        // ¿˙¿Âµ» ∞™¿Ã 1¿Ã∏È »πµÊ«— ∞Õ
+        return PlayerPrefs.GetInt("Badge_" + badgeID, 0) == 1;
+    }
+
+    //πÓ¡ˆ »πµÊΩ√ ui »£√‚
+    private void ShowBadgeNotification(BadgeData badgeData)
+    {
+        badgeIconUI.sprite = badgeData.badgeIcon;
+        badgeNameUI.text = badgeData.badgeName;
+        badgeDescriptionUI.text = badgeData.badgeDescription;
+
+        badgeNotificationPanel.SetActive(true);
+
+        Invoke(nameof(HideBadgeNotification), 3f);
+    }
+
+    private void HideBadgeNotification()
+    {
+        badgeNotificationPanel.SetActive(false);
+    }
+
+    public void CheckDeliverDone()
+    {
+        int currentDeliveryDone = myData.DeliveryDone;
+        if (currentDeliveryDone >= 1)
+            UnlockBadge(10);
+        if (currentDeliveryDone >= 5)
+            UnlockBadge(11);
+
+    }
+}
