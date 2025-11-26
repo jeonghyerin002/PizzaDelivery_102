@@ -22,4 +22,5 @@ public class StoreSO : ScriptableObject
     public float deliveryTimeLimit; // 배달할 때 제한 시간
     public int reward;
     public QuestDifficulty difficulty;
+    public float maxDurability = 100f;
 }

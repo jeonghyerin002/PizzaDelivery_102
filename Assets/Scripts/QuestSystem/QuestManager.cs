@@ -9,6 +9,7 @@ public class ActiveQuest
     public QuestState state;       // 현재 상태
     public GameObject targetObject; // 현재 가야 할 곳
     public float remainingTime;    // 현재 단계의 남은 시간
+    public float currentDurability; //현재 내구도
 
     public ActiveQuest(StoreSO data, GameObject startTarget)
     {
@@ -16,6 +17,7 @@ public class ActiveQuest
         this.state = QuestState.HeadingToPickup;
         this.targetObject = startTarget;
         this.remainingTime = data.pickupTimeLimit;
+        this.currentDurability = data.maxDurability;
     }
 
     // 픽업 완료 후 배달 단계로 전환하는 함수
@@ -164,17 +166,45 @@ public class QuestManager : MonoBehaviour
 
     public LocationTrigger FindRandomPickupLocation()
     {
-        // [안전장치] 만약 맵에 'Pickup' 타입의 건물이 하나도 없다면 에러 방지
         if (pickupLocations.Count == 0)
         {
             Debug.LogError("PicUp LocationTrigger가 한 개도 없습니다!");
             return null;
         }
 
-        // 0부터 리스트 크기(개수) 사이의 랜덤 숫자를 뽑음
+        // 0부터 리스트 크기 사이의 랜덤 숫자를 뽑음
         int randomIndex = Random.Range(0, pickupLocations.Count);
 
         // 해당 번호의 장소를 반환
         return pickupLocations[randomIndex];
+    }
+
+    public void PackageDamage(float damageAmount)
+    {
+        bool isChanged = false;
+
+        for (int i = activeQuests.Count - 1; i >= 0; i--)
+        {
+            ActiveQuest quest = activeQuests[i];
+
+            if (quest.state == QuestState.HeadingToDestination)
+            {
+                quest.currentDurability -= damageAmount;
+                isChanged = true;
+
+                // 내구도 0 되면 퀘스트 실패 처리
+                if (quest.currentDurability <= 0)
+                {
+                    Debug.Log($"퀘스트 실패: {quest.data.questName} - 물건 파손됨!");
+                    activeQuests.RemoveAt(i);
+                }
+            }
+        }
+
+        // UI 갱신 알림
+        if (isChanged)
+        {
+            onQuestStateChanged?.Invoke();
+        }
     }
 }

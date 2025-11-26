@@ -8,6 +8,8 @@ public class QuestUIEntry : MonoBehaviour
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI statusText;
     public TextMeshProUGUI timerText;
+    public Slider durabilitySlider;
+    public Image durabilityFillImage;
 
     private ActiveQuest myQuest;
     private QuestMarker myMarker;
@@ -41,6 +43,7 @@ public class QuestUIEntry : MonoBehaviour
         UpdateTimerDisplay();
         UpdateDistanceAndStatus();
         UpdateMarkerTarget();
+        UpdateDurabilityUI();
     }
 
     private void UpdateMarkerTarget()
@@ -93,5 +96,24 @@ public class QuestUIEntry : MonoBehaviour
     {
         UpdateTimerDisplay();
         UpdateDistanceAndStatus();
+    }
+
+    void UpdateDurabilityUI()
+    {
+        if (durabilitySlider == null) return;
+
+        if (myQuest.state == QuestState.HeadingToPickup)
+        {
+            durabilitySlider.gameObject.SetActive(false);
+        }
+        else
+        {
+            durabilitySlider.gameObject.SetActive(true);
+
+            float ratio = myQuest.currentDurability / myQuest.data.maxDurability;
+            durabilitySlider.value = ratio;
+            durabilityFillImage.color = Color.Lerp(Color.red, Color.green, ratio);
+
+        }
     }
 }
