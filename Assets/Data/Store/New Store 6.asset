@@ -18,3 +18,4 @@ MonoBehaviour:
   deliveryTimeLimit: 60
   reward: 100
   difficulty: 0
+  maxDurability: 200
