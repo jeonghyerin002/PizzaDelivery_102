@@ -4,13 +4,22 @@ using UnityEngine;
 
 public class PlayerCollision : MonoBehaviour
 {
-    [Header("충돌 설정")]
-    public float minImpactForce = 5f;
-    public float buildingDamage = 2f;
-    public float groundDamage = 2f;
+    [Header("내구도 설정")]
+    public float maxHealth = 100f;
+    public float currentHealth { get; private set; }
+
+    [Header("충격 민감도")]
+    public float damageThreshold = 10f; // 데미지를 입기 시작하는 최소 속도
+
+    [Tooltip("벽에 부딪칠 때(수평) 데미지 계수")]
+    public float horizontalMultiplier = 2.0f; // 벽 충돌은 아프게!
+
+    [Tooltip("바닥에 떨어질 때(수직) 데미지 계수")]
+    public float verticalMultiplier = 0.5f;   //낙하 데미지는 약하게 (0.5배)
 
     public float damageCooltime = 1f;
     private float lastDamageTime;
+    private bool isBroken = false;
     private void OnCollisionEnter(Collision collision)
     {
         if (Time.time < lastDamageTime + damageCooltime)
@@ -18,34 +27,31 @@ public class PlayerCollision : MonoBehaviour
             Debug.Log("무적시간");
             return;
         }
-        Debug.Log($"[충돌] 부딪힌 물체: {collision.gameObject.name} / 태그: {collision.gameObject.tag}");
-        float impactForce = collision.relativeVelocity.magnitude;
+        Vector3 relativeVel = collision.relativeVelocity;
 
-        //너무 살살 부딪힌 건 무시
-        if (impactForce < minImpactForce) return;
+        // 2. 수직(Y) 속도와 수평(X, Z) 속도 분리 계산
+        float vertSpeed = Mathf.Abs(relativeVel.y); // 위아래 속도 (절대값)
+        float horizSpeed = new Vector3(relativeVel.x, 0, relativeVel.z).magnitude; // 수평 속도
 
-        float finalDamage = 0f;
+        float totalDamage = 0f;
 
-        //부딫힌 대상 확인
-        if (collision.gameObject.CompareTag("Building")) // 건물 태그 확인
+        // 3. 수직 충격 (낙하) 계산 - verticalMultiplier 적용
+        if (vertSpeed > damageThreshold)
         {
-            finalDamage = buildingDamage * (impactForce / 10f);
-            Debug.Log($"건물 충돌! 강도: {impactForce:F1}, 데미지: {finalDamage:F1}");
-        }
-        else if (collision.gameObject.CompareTag("Ground"))
-        {
-            finalDamage = groundDamage;
-        }
-        else
-        {
-            finalDamage = 5f;
+            totalDamage += (vertSpeed - damageThreshold) * verticalMultiplier;
         }
 
-        if (finalDamage > 0)
+        // 4. 수평 충격 (벽 충돌) 계산 - horizontalMultiplier 적용
+        if (horizSpeed > damageThreshold)
         {
-            QuestManager.instance.PackageDamage(finalDamage);
+            totalDamage += (horizSpeed - damageThreshold) * horizontalMultiplier;
+        }
 
-            lastDamageTime = Time.time;
+        // 5. 데미지가 발생했다면 적용
+        if (totalDamage > 0)
+        {
+            QuestManager.instance.PackageDamage(totalDamage);
+            Debug.Log($"충돌! {collision.gameObject.name}에 수직속도:{vertSpeed:F1}, 수평속도:{horizSpeed:F1} => 총 데미지:{totalDamage:F1}");
         }
     }
 }
