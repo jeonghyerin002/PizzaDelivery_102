@@ -1,3 +1,4 @@
+using Cinemachine;
 using UnityEngine;
 
 public class Swinging : MonoBehaviour
@@ -8,6 +9,7 @@ public class Swinging : MonoBehaviour
     public PlayerController playerController;           //PlayerController 참조
     public Transform hand;
     public StaminaSystem staminaSystem;
+    public CinemachineVirtualCamera cam;
 
     [HideInInspector]
     public bool isSwinging = false;
@@ -19,6 +21,8 @@ public class Swinging : MonoBehaviour
     public float swingMassScale = 4.5f;  // 조인트에 연결된 질량 스케일
     public float swingRewind = 10f;     //1초에 줄을 감을 값
     public float swingPull = 20f;       //스윙 추진력
+    public float defaultFOV = 70f;
+    public float swingFOV = 90f;
 
     [Header("스테미나 설정")]
     public float startSwingCost = 5f;  //스윙 시작 스테미나 소모량
@@ -32,6 +36,7 @@ public class Swinging : MonoBehaviour
     private Rigidbody playerRigidbody;
     private SpringJoint springJoint;
     private Vector3 swingPoint;
+    private float targetFOV;
 
     void Start()
     {
@@ -39,6 +44,8 @@ public class Swinging : MonoBehaviour
         lineRenderer.enabled = false;
         playerController = GetComponent<PlayerController>();
         staminaSystem = GetComponent<StaminaSystem>();
+
+        targetFOV = defaultFOV;
     }
 
     void Update()
@@ -49,13 +56,19 @@ public class Swinging : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             StartSwing();
+            targetFOV = swingFOV;
         }
 
         // 마우스 왼쪽 버튼 뗄 시 스윙 중지
         if (Input.GetMouseButtonUp(0))
         {
             StopSwing();
+            targetFOV = defaultFOV;
         }
+
+        float currentFOV = cam.m_Lens.FieldOfView;
+        cam.m_Lens.FieldOfView = Mathf.Lerp(currentFOV, targetFOV, Time.deltaTime * 5f);
+
     }
 
     void FixedUpdate()
