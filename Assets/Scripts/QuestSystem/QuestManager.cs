@@ -37,6 +37,7 @@ public class QuestManager : MonoBehaviour
     [Header("난이도 설정")]
     public float easyMaxDistance = 100f;
     public float mediumMaxDistance = 300f;
+    public int maxActiveQuests = 3; //최대 수락 가능 개수
 
     [Header("퀘스트 관리")]
     public List<ActiveQuest> activeQuests = new List<ActiveQuest>();
@@ -77,8 +78,14 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public void AcceptQuest(StoreSO data, LocationTrigger pickupLocation)
+    public bool AcceptQuest(StoreSO data, LocationTrigger pickupLocation)
     {
+        if(activeQuests.Count >= maxActiveQuests)
+        {
+            Debug.LogWarning("퀘스트 가방이 모두 찼습니다");
+            return false;
+        }
+
         ActiveQuest newQuest = new ActiveQuest(data, pickupLocation.gameObject);
         activeQuests.Add(newQuest);
 
@@ -87,6 +94,8 @@ public class QuestManager : MonoBehaviour
 
         Debug.Log($"퀘스트 수락! 픽업지로 이동하세요: {pickupLocation.name}");
         onQuestStateChanged?.Invoke();
+
+        return true;
     }
 
     public void OnPlayerReachLocation(ActiveQuest quest, LocationTrigger location)

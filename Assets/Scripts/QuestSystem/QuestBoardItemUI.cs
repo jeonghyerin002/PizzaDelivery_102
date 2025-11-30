@@ -53,13 +53,16 @@ public class QuestBoardItemUI : MonoBehaviour
 
     void OnAcceptClicked()
     {
-        // 1. 실제 퀘스트 시작 (매니저에게 알림)
-        QuestManager.instance.AcceptQuest(_data, _pickupLocation);
+        bool isAccepted = QuestManager.instance.AcceptQuest(_data, _pickupLocation);    //퀘스트 여부 체크
 
-        // 2. 보드에게 "나 빠질게, 새거 채워줘"라고 요청
-        if (_parentBoard != null)
+        if(isAccepted)
         {
-            _parentBoard.OnItemAccepted(this.gameObject);
+            if (_parentBoard != null)
+                _parentBoard.OnItemAccepted(this.gameObject);
+        }
+        else
+        {
+            Debug.LogWarning("더이상 퀘스트를 받을 수 없습니다");
         }
     }
 }
