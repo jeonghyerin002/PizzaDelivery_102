@@ -78,12 +78,16 @@ public class QuestUIEntry : MonoBehaviour
             statusText.text = $"[픽업] {myQuest.targetObject.name}까지" +
                 $"{distance:F0}m";
             statusText.color = Color.yellow;
+
+            if (myMarker != null) myMarker.SetLabel("[픽업]", Color.yellow);
         }
         else
         {
             statusText.text = $"[배달] {myQuest.targetObject.name}까지" +
                 $"{distance:F0}m";
             statusText.color = Color.green;
+
+            if (myMarker != null) myMarker.SetLabel("[배달]", Color.green);
         }
     }
 

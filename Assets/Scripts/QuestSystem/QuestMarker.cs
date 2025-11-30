@@ -7,6 +7,7 @@ public class QuestMarker : MonoBehaviour
     [Header("UI 연결")]
     public RectTransform markerContainer;
     public TextMeshProUGUI distanceText;
+    public TextMeshProUGUI labelText;
 
     [Header("설정")]
     public Vector3 offset = new Vector3(0, 1.5f, 0); //머리 위 얼마나 띄울지
@@ -60,5 +61,16 @@ public class QuestMarker : MonoBehaviour
     {
         isActive = false;
         if (markerContainer != null) markerContainer.gameObject.SetActive(false);
+    }
+
+    public void SetLabel(string text, Color color)
+    {
+        if(labelText != null)
+        {
+            labelText.text = text;
+            labelText.color = color;
+        }
+
+        if (distanceText != null) distanceText.color = color;
     }
 }
