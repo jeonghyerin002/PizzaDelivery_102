@@ -12,7 +12,8 @@ public class PauseMenu : MonoBehaviour
 
     private void Start()
     {
-        pauseMenu.SetActive(false);
+        if(pauseMenu != null)
+            pauseMenu.SetActive(false);
     }
 
     private void Update()
@@ -59,5 +60,10 @@ public class PauseMenu : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void GameStart()
+    {
+        SceneManager.LoadScene("RealMap");
     }
 }
