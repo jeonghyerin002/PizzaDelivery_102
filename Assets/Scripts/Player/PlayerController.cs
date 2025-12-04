@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     public float walkSpeed = 10f;       //걷기 속도
     public float runSpeed = 20f;        //달리기 속도
     public float jumpForce = 8f;
-    public float groundDistance = 0.4f; // 감지할 거리 (원의 반지름)
+    public Vector3 groundBoxSize = new Vector3(0.4f, 0.1f, 0.4f);
     public float rotationSpeed = 10f;
     public float breakForce = 7f;
     public float runStaminaCost = 15f;   //추가 달리기 스테미나 초당 소모량
@@ -42,6 +42,10 @@ public class PlayerController : MonoBehaviour
     public float BottomClamp = -30f;
     public float TopClamp = 70f;
     public float CameraAngleOverride = 0f;
+
+    [Header("착지 설정")]
+    public float hardLandVelocity = -20f;
+    public float hardLandMoveSpeed = 20f;
 
     //감도 불러오기
     private const string SensitivityKey = "MouseSensitivity";
@@ -72,6 +76,7 @@ public class PlayerController : MonoBehaviour
         {
             mainCamera = Camera.main;
         }
+        AudioManager.instance.PlayBGM("main");
     }
 
     private void LateUpdate()
@@ -164,7 +169,7 @@ public class PlayerController : MonoBehaviour
         if (PauseMenu.isPaused) return;     //게임 일시정지 상태면 return
 
         //지상 체크
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundLayer);
+        isGrounded = Physics.CheckBox(groundCheck.position, groundBoxSize, transform.rotation, groundLayer);
 
         //이동 처리
         Vector3 cameraForward = mainCamera.transform.forward;
@@ -176,10 +181,21 @@ public class PlayerController : MonoBehaviour
 
         Vector3 moveDirection = (cameraForward * verticalInput + cameraRight * horizontalInput).normalized;
 
-        animator.SetBool("isGrounded", isGrounded);
+        if (swinging.isSwinging)
+        {
+            animator.SetBool("isGrounded", true);
+        }
+        else
+        {
+            animator.SetBool("isGrounded", isGrounded);
+        }
 
         float horizontalSpeed = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
         animator.SetFloat("moveSpeed", horizontalSpeed);
+        animator.ResetTrigger("Jump");
+        animator.SetFloat("fallSpeed", rb.velocity.y);
+
+
 
         // 지상일 때 이동
         if (isGrounded)
@@ -188,7 +204,19 @@ public class PlayerController : MonoBehaviour
 
             if (!wasGrounded)
             {
-                animator.SetTrigger("Land");
+                float fallSpeed = rb.velocity.y;
+
+                if (fallSpeed < hardLandVelocity || horizontalSpeed > hardLandMoveSpeed)
+                {
+                    animator.ResetTrigger("Land");
+                    animator.SetTrigger("HardLand");
+                    Debug.Log($"강한 착지 속도 {fallSpeed}");
+                }
+                else
+                {
+                    animator.ResetTrigger("HardLand");
+                    animator.SetTrigger("Land");
+                }
 
                 // 즉시 회전 리셋 및 고정
                 rb.angularVelocity = Vector3.zero; // 남은 회전 제거
@@ -235,6 +263,19 @@ public class PlayerController : MonoBehaviour
         }
 
         wasGrounded = isGrounded;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.red;
+
+            Matrix4x4 rotationMatrix = Matrix4x4.TRS(groundCheck.position, transform.rotation, transform.localScale);
+            Gizmos.matrix = rotationMatrix;
+
+            Gizmos.DrawWireCube(Vector3.zero, groundBoxSize * 2);
+        }
     }
 
 }
