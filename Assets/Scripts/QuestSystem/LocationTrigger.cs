@@ -23,6 +23,11 @@ public class LocationTrigger : MonoBehaviour
         }
     }
 
+    public void ResetTrigger()
+    {
+        relatedQuests.Clear();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && relatedQuests.Count > 0)

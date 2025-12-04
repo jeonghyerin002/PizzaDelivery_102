@@ -11,11 +11,29 @@ public class QuestBoardUI : MonoBehaviour
     [Header("데이터")]
     public List<StoreSO> allQuestData;
 
+    [Header("긴급 퀘스트")]
+    public GameObject lockdownPanel;        //퀘스트 수락 불가
+
     private void Start()
     {
         for (int i = 0; i < maxSlots; i++)
         {
             AddRandomQuest();
+        }
+    }
+
+    public void SetEmergencyLockdown(bool isLocked)
+    {
+        if (lockdownPanel != null)
+            lockdownPanel.SetActive(isLocked);
+
+        if (isLocked)
+        {
+            foreach (Transform child in contentTransform) Destroy(child.gameObject);
+        }
+        else
+        {
+            for (int i = 0; i < maxSlots; i++) AddRandomQuest();
         }
     }
 
