@@ -11,6 +11,8 @@ public class ActiveQuest
     public float remainingTime;    // 현재 단계의 남은 시간
     public float currentDurability; //현재 내구도
 
+    public GameObject Destination;
+
     public ActiveQuest(StoreSO data, GameObject startTarget)
     {
         this.data = data;
@@ -18,6 +20,7 @@ public class ActiveQuest
         this.targetObject = startTarget;
         this.remainingTime = data.pickupTimeLimit;
         this.currentDurability = data.maxDurability;
+        this.Destination = null;
     }
 
     // 픽업 완료 후 배달 단계로 전환하는 함수
@@ -33,6 +36,7 @@ public class QuestManager : MonoBehaviour
 {
     public static QuestManager instance; // 싱글톤 인스턴스
     public Transform playerTransform; // 플레이어 위치 계산용
+    public QuestBoardUI questBoard;
 
     [Header("난이도 설정")]
     public float easyMaxDistance = 100f;
@@ -46,6 +50,9 @@ public class QuestManager : MonoBehaviour
     private List<LocationTrigger> deliveryLocations = new List<LocationTrigger>();
 
     public System.Action onQuestStateChanged;
+
+    [HideInInspector]
+    public static bool isEmergencyActive = false;
 
     private void Awake()
     {
@@ -73,6 +80,13 @@ public class QuestManager : MonoBehaviour
                 Debug.Log($"'{activeQuests[i].data.questName}' 퀘스트 시간 초과!");
                 myData.DeliveryFail++;
                 activeQuests.RemoveAt(i);
+
+                if (activeQuests.Count == 0 && isEmergencyActive)
+                {
+                    EndEmergencyQuest();
+                    Debug.Log("긴급 퀘스트 시간 초과");
+                }
+
                 onQuestStateChanged?.Invoke(); // UI 업데이트 알림
             }
         }
@@ -80,7 +94,7 @@ public class QuestManager : MonoBehaviour
 
     public bool AcceptQuest(StoreSO data, LocationTrigger pickupLocation)
     {
-        if(activeQuests.Count >= maxActiveQuests)
+        if (activeQuests.Count >= maxActiveQuests)
         {
             Debug.LogWarning("퀘스트 가방이 모두 찼습니다");
             return false;
@@ -102,7 +116,18 @@ public class QuestManager : MonoBehaviour
     {
         if (quest.state == QuestState.HeadingToPickup)
         {
-            GameObject finalDest = FindDestinationForQuest(quest.data.difficulty, location.transform.position);
+            GameObject finalDest = null;
+
+            if (quest.Destination != null)
+            {
+                finalDest = quest.Destination;
+                Debug.Log("긴급 퀘스트: 지정된 목적지로 설정됨.");
+            }
+            else
+            {
+                // 기존 랜덤 로직
+                finalDest = FindDestinationForQuest(quest.data.difficulty, location.transform.position);
+            }
 
             if (finalDest != null)
             {
@@ -114,20 +139,20 @@ public class QuestManager : MonoBehaviour
 
                 Debug.Log($"물품 픽업 완료! 배달지로 이동하세요: {finalDest.name}");
             }
-            else
-            {
-                Debug.LogError("적절한 배달지를 찾지 못했습니다.");
-            }
-        }
-        else if (quest.state == QuestState.HeadingToDestination)
-        {
-            // 배달 성공
-            myData.DeliveryDone++;
-            BadgeManager.Instance.CheckDeliverDone();
-            Debug.Log($"배달 완료! 보상: {quest.data.reward}");
-            activeQuests.Remove(quest);
         }
 
+        else if (quest.state == QuestState.HeadingToDestination)
+        {
+            Debug.Log($"배달 완료! 보상: {quest.data.reward}");
+            activeQuests.Remove(quest);
+
+            // 배달 성공
+            if (activeQuests.Count == 0 && isEmergencyActive)
+            {
+                EndEmergencyQuest();
+                Debug.Log("긴급 상황 해제. 정상 영업 재개.");
+            }
+        }
         onQuestStateChanged?.Invoke();
     }
 
@@ -177,7 +202,7 @@ public class QuestManager : MonoBehaviour
     {
         if (pickupLocations.Count == 0)
         {
-            Debug.LogError("PicUp LocationTrigger가 한 개도 없습니다!");
+            Debug.LogError("픽업지가 없습니다");
             return null;
         }
 
@@ -201,11 +226,16 @@ public class QuestManager : MonoBehaviour
                 quest.currentDurability -= damageAmount;
                 isChanged = true;
 
-                // 내구도 0 되면 퀘스트 실패 처리
-                if (quest.currentDurability <= 0)
+                if(quest.currentDurability <= 0)
                 {
-                    Debug.Log($"퀘스트 실패: {quest.data.questName} - 물건 파손됨!");
+                    Debug.Log("퀘스트 실패 물건 파손");
                     activeQuests.RemoveAt(i);
+
+                    if(activeQuests.Count == 0 && isEmergencyActive)
+                    {
+                        Debug.Log("긴급 퀘스트 실패 물건 파손");
+                        EndEmergencyQuest();
+                    }
                 }
             }
         }
@@ -216,4 +246,50 @@ public class QuestManager : MonoBehaviour
             onQuestStateChanged?.Invoke();
         }
     }
+
+    public void TriggerEmergencyQuest(StoreSO questData, LocationTrigger pickupLoc, GameObject fixedDestination)
+    {
+        //진행중인 퀘스트 삭제
+        activeQuests.Clear();
+
+        LocationTrigger[] allTriggers = FindObjectsOfType<LocationTrigger>();
+        foreach (var trigger in allTriggers)
+        {
+            trigger.ResetTrigger();
+        }
+
+        isEmergencyActive = true;
+
+        //게시판 잠금
+        if (questBoard != null)
+            questBoard.SetEmergencyLockdown(true);
+
+        //긴급 퀘스트 생성
+        ActiveQuest emergencyQuest = new ActiveQuest(questData, pickupLoc.gameObject);
+
+        //퀘스트 목적 설정
+        emergencyQuest.Destination = fixedDestination;
+
+        //리스트에 추가 및 시작
+        activeQuests.Add(emergencyQuest);
+        pickupLoc.ActivateTrigger(emergencyQuest);
+
+        Debug.LogWarning($"긴급 퀘스트 발동! '{questData.questName}' 시작됨.");
+        onQuestStateChanged?.Invoke();
+    }
+    private void EndEmergencyQuest()
+    {
+        if (isEmergencyActive)
+        {
+            isEmergencyActive = false;
+
+            if (questBoard != null)
+            {
+                questBoard.SetEmergencyLockdown(false); // 잠금 해제
+            }
+
+            Debug.Log("긴급 퀘스트 종료");
+        }
+    }
+
 }
