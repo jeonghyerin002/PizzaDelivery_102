@@ -1,4 +1,5 @@
 using Cinemachine;
+using GLTFast.Schema;
 using UnityEngine;
 
 public class Swinging : MonoBehaviour
@@ -36,6 +37,7 @@ public class Swinging : MonoBehaviour
     [Header("레벨당 증가량")]
     public float staminaPerLevel = 10f;
     public float airControlPerLevel = 2f;
+    public float maxSwingDistancePerLevel = 5f;
 
     private Rigidbody playerRigidbody;
     private SpringJoint springJoint;
@@ -170,6 +172,8 @@ public class Swinging : MonoBehaviour
         lineRenderer.enabled = false;
         isSwinging = false;
         playerController.animator.SetBool("isSwinging", false);
+        playerController.animator.ResetTrigger("Land");
+        playerController.animator.ResetTrigger("HardLand");
 
         SpringJoint[] allJoints = GetComponents<SpringJoint>();
 
@@ -207,6 +211,8 @@ public class Swinging : MonoBehaviour
         airControlForce = airControlForce + airControlBonus;
 
         Debug.Log($"공중 컨트롤 {airControlForce}");
-        
+
+        float maxSwingDistanceBonus = (myData.maxSwingDistanceLevel - 1) * maxSwingDistancePerLevel;
+        maxSwingDistance = maxSwingDistance + maxSwingDistanceBonus;
     }
 }

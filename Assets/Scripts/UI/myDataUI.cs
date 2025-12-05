@@ -11,6 +11,7 @@ public class myDataUI : MonoBehaviour
     public TMP_Text deliveryFailText;
 
     public TMP_Text airControlLevelText;
+    public TMP_Text maxSwingDistanceLevelText;
 
     private void OnEnable()
     {
@@ -37,5 +38,8 @@ public class myDataUI : MonoBehaviour
 
         if (airControlLevelText != null)
             airControlLevelText.text = $"Lv.{myData.AirControlLevel}";
+
+        if (maxSwingDistanceLevelText != null)
+            maxSwingDistanceLevelText.text = $"Lv.{myData.maxSwingDistanceLevel}";
     }
 }

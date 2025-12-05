@@ -20,7 +20,8 @@ public class PlayerController : MonoBehaviour
     public Vector3 groundBoxSize = new Vector3(0.4f, 0.1f, 0.4f);
     public float rotationSpeed = 10f;
     public float breakForce = 7f;
-    public float runStaminaCost = 15f;   //추가 달리기 스테미나 초당 소모량
+    public float airMultiplier = 0.5f;      //공중 이동 비율
+    public float runStaminaCost = 15f;   //달리기 스테미나 초당 소모량
 
     [HideInInspector]
     public bool isGrounded;
@@ -234,7 +235,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            rb.drag = 0f;
+            rb.drag = 0.3f;
 
             if (wasGrounded)
             {
@@ -242,6 +243,11 @@ public class PlayerController : MonoBehaviour
             }
 
             rb.constraints = RigidbodyConstraints.FreezeRotationY;
+
+            if(!swinging.isSwinging)
+            {
+                rb.AddForce(moveDirection * moveSpeed * airMultiplier, ForceMode.Acceleration);
+            }
         }
 
         //스윙중이 아니고 플레이어가 회전한다면

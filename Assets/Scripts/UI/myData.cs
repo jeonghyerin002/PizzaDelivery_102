@@ -14,6 +14,7 @@ public static class myData
     //½ºÅÈ
     private const string keyStaminaLevel = "Stat_StaminaLevel";
     private const string keyAirControlLevel = "Stat_AirControlLevel2";
+    private const string keymaxSwingDistanceLevel = "Stat_maxSwingDistance";
 
 
 
@@ -61,6 +62,16 @@ public static class myData
         set
         {
             PlayerPrefs.SetInt(keyAirControlLevel, value);
+            OnDataChanged?.Invoke();
+        }
+    }
+
+    public static int maxSwingDistanceLevel
+    {
+        get => PlayerPrefs.GetInt(keymaxSwingDistanceLevel, 1);
+        set
+        {
+            PlayerPrefs.SetInt(keymaxSwingDistanceLevel, value);
             OnDataChanged?.Invoke();
         }
     }
