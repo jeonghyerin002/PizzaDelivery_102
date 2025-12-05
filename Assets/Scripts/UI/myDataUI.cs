@@ -10,6 +10,8 @@ public class myDataUI : MonoBehaviour
     public TMP_Text deliveryDoneText;
     public TMP_Text deliveryFailText;
 
+    public TMP_Text airControlLevelText;
+
     private void OnEnable()
     {
         myData.OnDataChanged += UpdateUI;
@@ -32,5 +34,8 @@ public class myDataUI : MonoBehaviour
 
         if (deliveryFailText != null)
             deliveryFailText.text = $"배달 실패: {myData.DeliveryFail}";
+
+        if (airControlLevelText != null)
+            airControlLevelText.text = $"Lv.{myData.AirControlLevel}";
     }
 }

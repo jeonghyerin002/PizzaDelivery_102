@@ -33,6 +33,10 @@ public class Swinging : MonoBehaviour
     public float swingReleaseBoost = 5f; // 스윙을 끊을 때 추가할 힘
     public float backFlipSpeed = 20f;   //이 속도가 넘어가면 백플립
 
+    [Header("레벨당 증가량")]
+    public float staminaPerLevel = 10f;
+    public float airControlPerLevel = 2f;
+
     private Rigidbody playerRigidbody;
     private SpringJoint springJoint;
     private Vector3 swingPoint;
@@ -46,6 +50,7 @@ public class Swinging : MonoBehaviour
         staminaSystem = GetComponent<StaminaSystem>();
 
         targetFOV = defaultFOV;
+        ApplyStats();
     }
 
     void Update()
@@ -162,26 +167,27 @@ public class Swinging : MonoBehaviour
 
     void StopSwing()
     {
-        // 라인 렌더러 비활성화
         lineRenderer.enabled = false;
+        isSwinging = false;
+        playerController.animator.SetBool("isSwinging", false);
 
-        // SpringJoint가 존재하면 제거
-        if (springJoint != null)
+        SpringJoint[] allJoints = GetComponents<SpringJoint>();
+
+        if (allJoints.Length > 0)
         {
-            Destroy(springJoint);
-            springJoint = null;
-            isSwinging = false;
+            foreach (SpringJoint joint in allJoints)
+            {
+                Destroy(joint);
+            }
+            springJoint = null; // 변수도 비움
 
-            float currentSpeed = playerRigidbody.velocity.magnitude;        //속도 확인
-            playerController.animator.SetBool("isSwinging", false);
+            float currentSpeed = playerRigidbody.velocity.magnitude;
 
             if (currentSpeed > backFlipSpeed)
             {
-                // 백플립 애니메이션 트리거 발동
                 playerController.animator.SetTrigger("backFlip");
             }
 
-            //스윙을 끊을때 부스트 적용
             playerRigidbody.AddForce(playerController.mainCamera.transform.forward * swingReleaseBoost, ForceMode.Impulse);
         }
     }
@@ -193,5 +199,14 @@ public class Swinging : MonoBehaviour
 
         // 라인의 시작점을 플레이어의 현재 위치로 계속 업데이트
         lineRenderer.SetPosition(0, hand.position);
+    }
+
+    public void ApplyStats()
+    {
+        float airControlBonus = (myData.AirControlLevel - 1) * airControlPerLevel;
+        airControlForce = airControlForce + airControlBonus;
+
+        Debug.Log($"공중 컨트롤 {airControlForce}");
+        
     }
 }

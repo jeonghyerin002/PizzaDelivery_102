@@ -51,6 +51,9 @@ public class PlayerController : MonoBehaviour
     private const string SensitivityKey = "MouseSensitivity";
     private float defaultSensitivity = 0.3f;
 
+    [HideInInspector]
+    public static bool pausePlayer = false;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -119,6 +122,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (PauseMenu.isPaused) return;     //게임 일시정지 상태면 return
+        if (pausePlayer) return;
         if (PhoneOnOff.isPhone)
         {
             rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
@@ -167,6 +171,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         if (PauseMenu.isPaused) return;     //게임 일시정지 상태면 return
+        if (pausePlayer) return;
 
         //지상 체크
         isGrounded = Physics.CheckBox(groundCheck.position, groundBoxSize, transform.rotation, groundLayer);
