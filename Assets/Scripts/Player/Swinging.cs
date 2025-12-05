@@ -124,6 +124,7 @@ public class Swinging : MonoBehaviour
         {
             if (staminaSystem.DrainStamina(startSwingCost))
             {
+                AudioManager.instance.PlaySFX("Wind");
                 swingPoint = hit.point; // 맞은 지점을 스윙 포인트로 저장
                 isSwinging = true;
                 playerController.animator.SetBool("isSwinging", true);

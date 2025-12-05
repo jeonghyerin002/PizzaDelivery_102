@@ -85,6 +85,7 @@ public class QuestManager : MonoBehaviour
                 {
                     EndEmergencyQuest();
                     Debug.Log("긴급 퀘스트 시간 초과");
+                    myData.DeliveryFail++;
                 }
 
                 onQuestStateChanged?.Invoke(); // UI 업데이트 알림
@@ -145,6 +146,8 @@ public class QuestManager : MonoBehaviour
         {
             Debug.Log($"배달 완료! 보상: {quest.data.reward}");
             activeQuests.Remove(quest);
+            myData.DeliveryDone++;
+            myData.Coin += quest.data.reward;
 
             // 배달 성공
             if (activeQuests.Count == 0 && isEmergencyActive)
@@ -230,6 +233,7 @@ public class QuestManager : MonoBehaviour
                 {
                     Debug.Log("퀘스트 실패 물건 파손");
                     activeQuests.RemoveAt(i);
+                    myData.DeliveryFail++;
 
                     if(activeQuests.Count == 0 && isEmergencyActive)
                     {
