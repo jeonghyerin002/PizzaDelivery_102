@@ -12,9 +12,10 @@ public static class myData
     private const string keyCoin = "Delivery_Coin";
 
     //½ºÅÈ
-    private const string keyStaminaLevel = "Stat_StaminaLevel";
-    private const string keyAirControlLevel = "Stat_AirControlLevel2";
-    private const string keymaxSwingDistanceLevel = "Stat_maxSwingDistance";
+    private const string keyStaminaLevel = "Stat_StaminaLevel3";
+    private const string keyAirControlLevel = "Stat_AirControlLevel3";
+    private const string keymaxSwingDistanceLevel = "Stat_maxSwingDistance3";
+    private const string keymaxStamina = "Stat_maxStamina3";
 
 
 
@@ -72,6 +73,15 @@ public static class myData
         set
         {
             PlayerPrefs.SetInt(keymaxSwingDistanceLevel, value);
+            OnDataChanged?.Invoke();
+        }
+    }
+    public static int maxStaminaLevel
+    {
+        get => PlayerPrefs.GetInt(keymaxStamina, 1);
+        set
+        {
+            PlayerPrefs.SetInt(keymaxStamina, value);
             OnDataChanged?.Invoke();
         }
     }

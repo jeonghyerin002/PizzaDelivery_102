@@ -6,10 +6,13 @@ public class StaminaSystem : MonoBehaviour
     [Header("스테미나 설정")]
     public float maxStamina = 100f;
     public float regenRate = 10f;       // 초당 회복량
-    public float regenDelay = 2f;       // 행동 멈춘 후 회복 시작 딜레이
+    public float regenDelay = 1.5f;       // 행동 멈춘 후 회복 시작 딜레이
 
     [Header("UI")]
     public Slider staminaSlider;
+
+    [Header("업그레이드 설정")]
+    public float maxStaminaPerLev = 10f;
 
     // 현재 스테미나 (외부에서 읽기만 가능)
     public float currentStamina { get; private set; }
@@ -18,6 +21,7 @@ public class StaminaSystem : MonoBehaviour
 
     void Start()
     {
+        ApplyStats();
         currentStamina = maxStamina;
 
         if (staminaSlider != null)
@@ -25,6 +29,7 @@ public class StaminaSystem : MonoBehaviour
             staminaSlider.maxValue = maxStamina;
             staminaSlider.value = currentStamina;
         }
+
     }
 
     void Update()
@@ -65,5 +70,14 @@ public class StaminaSystem : MonoBehaviour
         {
             staminaSlider.value = currentStamina;
         }
+    }
+
+    public void ApplyStats()
+    {
+        float bonus = (myData.maxStaminaLevel - 1) * maxStaminaPerLev;
+        maxStamina = maxStamina + bonus;
+        staminaSlider.maxValue = maxStamina;
+
+        Debug.Log($"스테미나 {myData.maxStaminaLevel}레벨 적용. 현재 최대 스테미나 {maxStamina}");
     }
 }

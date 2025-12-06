@@ -4,11 +4,13 @@ using UnityEngine.UI;
 
 public class UpgradeManager : MonoBehaviour
 {
-    public Swinging player;
+    public Swinging swinging;
+    public StaminaSystem staminaSystem;
 
     [Header("UI 연결")]
     public TMP_Text airControlCostText;
     public TMP_Text maxSwingDistanceCostText;
+    public TMP_Text maxStaminaText;
     public TMP_Text messageText;
 
     [Header("공중 컨트롤 가격")]
@@ -17,13 +19,19 @@ public class UpgradeManager : MonoBehaviour
     [Header("스윙 길이 가격")]
     public int baseMaxSwingCost = 100;
 
+    [Header("최대 스테미나 가격")]
+    public int baseMaxStaminaCost = 100;
+
     [Header("가격")]
     public int CostIncrease = 50;
 
     void Start()
     {
-        if (player == null)
-            player = FindObjectOfType<Swinging>();
+        if (swinging == null)
+            swinging = FindObjectOfType<Swinging>();
+
+        if(staminaSystem == null)
+            staminaSystem = FindObjectOfType<StaminaSystem>();
 
         UpdateUI();
     }
@@ -38,9 +46,12 @@ public class UpgradeManager : MonoBehaviour
         int airCost = GetCurrentCost(myData.AirControlLevel, baseAirControlCost, CostIncrease);
         airControlCostText.text = $"비용: {airCost}";
 
-        // 2. MaxSwingDistance 비용 계산
+
         int swingCost = GetCurrentCost(myData.maxSwingDistanceLevel, baseMaxSwingCost, CostIncrease);
         maxSwingDistanceCostText.text = $"비용: {swingCost}";
+
+        int staminaCost = GetCurrentCost(myData.maxStaminaLevel, baseMaxStaminaCost, CostIncrease);
+        maxStaminaText.text = $"비용: {staminaCost}";
     }
 
     public void BuyAirControlUpgrade()
@@ -52,7 +63,7 @@ public class UpgradeManager : MonoBehaviour
             myData.Coin -= cost;
             myData.AirControlLevel++;
 
-            player.ApplyStats();
+            swinging.ApplyStats();
             UpdateUI();
             ShowMassage("업그레이드 성공!", true);
         }
@@ -70,7 +81,25 @@ public class UpgradeManager : MonoBehaviour
             myData.Coin -= cost;
             myData.maxSwingDistanceLevel++;
 
-            player.ApplyStats();
+            swinging.ApplyStats();
+            UpdateUI();
+            ShowMassage("업그레이드 성공!", true);
+        }
+        else
+        {
+            ShowMassage("코인이 부족합니다!", false);
+        }
+    }
+    public void BuymaxStaminaUpgrade()
+    {
+        int cost = GetCurrentCost(myData.maxStaminaLevel, baseMaxStaminaCost, CostIncrease);
+
+        if (myData.Coin >= cost) // 돈이 충분한지 확인
+        {
+            myData.Coin -= cost;
+            myData.maxStaminaLevel++;
+
+            staminaSystem.ApplyStats();
             UpdateUI();
             ShowMassage("업그레이드 성공!", true);
         }

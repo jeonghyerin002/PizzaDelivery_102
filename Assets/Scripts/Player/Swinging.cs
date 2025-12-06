@@ -212,9 +212,11 @@ public class Swinging : MonoBehaviour
         float airControlBonus = (myData.AirControlLevel - 1) * airControlPerLevel;
         airControlForce = airControlForce + airControlBonus;
 
-        Debug.Log($"공중 컨트롤 {airControlForce}");
+        Debug.Log($"공중 컨트롤 {myData.AirControlLevel}레벨 적용! {airControlForce}");
 
         float maxSwingDistanceBonus = (myData.maxSwingDistanceLevel - 1) * maxSwingDistancePerLevel;
         maxSwingDistance = maxSwingDistance + maxSwingDistanceBonus;
+
+        Debug.Log($"최대 스윙거리 {myData.maxSwingDistanceLevel}레벨 적용! {maxSwingDistance}");
     }
 }
