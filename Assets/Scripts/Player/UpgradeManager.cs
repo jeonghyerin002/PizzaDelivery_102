@@ -13,16 +13,12 @@ public class UpgradeManager : MonoBehaviour
     public TMP_Text maxStaminaText;
     public TMP_Text messageText;
 
-    [Header("공중 컨트롤 가격")]
+    [Header("가격")]
     public int baseAirControlCost = 100;
-
-    [Header("스윙 길이 가격")]
     public int baseMaxSwingCost = 100;
-
-    [Header("최대 스테미나 가격")]
     public int baseMaxStaminaCost = 100;
 
-    [Header("가격")]
+    [Header("가격 상승")]
     public int CostIncrease = 50;
 
     void Start()
@@ -58,7 +54,12 @@ public class UpgradeManager : MonoBehaviour
     {
         int cost = GetCurrentCost(myData.AirControlLevel, baseAirControlCost, CostIncrease);
 
-        if (myData.Coin >= cost) // 돈이 충분한지 확인
+        if (myData.maxSwingDistanceLevel >= 10)
+        {
+            ShowMassage("더이상 업그레이드 할 수 없습니다!", false);
+            return;
+        }
+        else if (myData.Coin >= cost) // 돈이 충분한지 확인
         {
             myData.Coin -= cost;
             myData.AirControlLevel++;
@@ -76,7 +77,12 @@ public class UpgradeManager : MonoBehaviour
     {
         int cost = GetCurrentCost(myData.maxSwingDistanceLevel, baseMaxSwingCost, CostIncrease);
 
-        if (myData.Coin >= cost) // 돈이 충분한지 확인
+        if(myData.maxSwingDistanceLevel >= 10)
+        {
+            ShowMassage("더이상 업그레이드 할 수 없습니다!", false);
+            return;
+        }
+        else if (myData.Coin >= cost) // 돈이 충분한지 확인
         {
             myData.Coin -= cost;
             myData.maxSwingDistanceLevel++;
@@ -94,7 +100,12 @@ public class UpgradeManager : MonoBehaviour
     {
         int cost = GetCurrentCost(myData.maxStaminaLevel, baseMaxStaminaCost, CostIncrease);
 
-        if (myData.Coin >= cost) // 돈이 충분한지 확인
+        if (myData.maxSwingDistanceLevel >= 10)
+        {
+            ShowMassage("더이상 업그레이드 할 수 없습니다!", false);
+            return;
+        }
+        else if (myData.Coin >= cost) // 돈이 충분한지 확인
         {
             myData.Coin -= cost;
             myData.maxStaminaLevel++;
