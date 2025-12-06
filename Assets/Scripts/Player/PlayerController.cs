@@ -198,13 +198,12 @@ public class PlayerController : MonoBehaviour
 
         float horizontalSpeed = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
         animator.SetFloat("moveSpeed", horizontalSpeed);
-        animator.ResetTrigger("Jump");
         animator.SetFloat("fallSpeed", rb.velocity.y);
 
 
 
         // 지상일 때 이동
-        if (isGrounded)
+        if (isGrounded && !swinging.isSwinging)
         {
             rb.drag = 1f;
 
@@ -214,12 +213,14 @@ public class PlayerController : MonoBehaviour
 
                 if (fallSpeed < hardLandVelocity || horizontalSpeed > hardLandMoveSpeed)
                 {
+                    animator.ResetTrigger("Jump");
                     animator.ResetTrigger("Land");
                     animator.SetTrigger("HardLand");
                     Debug.Log($"강한 착지 속도 {fallSpeed}");
                 }
                 else
                 {
+                    animator.ResetTrigger("Jump");
                     animator.ResetTrigger("HardLand");
                     animator.SetTrigger("Land");
                 }
@@ -232,6 +233,13 @@ public class PlayerController : MonoBehaviour
             }
 
             rb.AddForce(moveDirection * moveSpeed, ForceMode.Acceleration);
+
+            // 지상 회전
+            if (moveDirection.sqrMagnitude > 0.01f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * rotationSpeed);
+            }
         }
         else
         {
@@ -246,15 +254,19 @@ public class PlayerController : MonoBehaviour
 
             if(!swinging.isSwinging)
             {
-                rb.AddForce(moveDirection * moveSpeed * airMultiplier, ForceMode.Acceleration);
-            }
-        }
+                Vector3 flatVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+                if (flatVel.magnitude < 7)
+                {
+                    rb.AddForce(moveDirection * moveSpeed * airMultiplier, ForceMode.Acceleration);
+                }
 
-        //스윙중이 아니고 플레이어가 회전한다면
-        if (!swinging.isSwinging && moveDirection.sqrMagnitude > 0.01f)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * rotationSpeed);
+                // 공중 회전
+                if (moveDirection.sqrMagnitude > 0.01f)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * rotationSpeed);
+                }
+            }
         }
 
         // 입력 크기

@@ -11,6 +11,7 @@ public class Swinging : MonoBehaviour
     public Transform hand;
     public StaminaSystem staminaSystem;
     public CinemachineVirtualCamera cam;
+    public WindSound windSound;
 
     [HideInInspector]
     public bool isSwinging = false;
@@ -64,6 +65,7 @@ public class Swinging : MonoBehaviour
         {
             StartSwing();
             targetFOV = swingFOV;
+            windSound.StartSwinging();
         }
 
         // 마우스 왼쪽 버튼 뗄 시 스윙 중지
@@ -71,6 +73,7 @@ public class Swinging : MonoBehaviour
         {
             StopSwing();
             targetFOV = defaultFOV;
+            windSound.StopSwinging();
         }
 
         float currentFOV = cam.m_Lens.FieldOfView;
@@ -131,7 +134,6 @@ public class Swinging : MonoBehaviour
         {
             if (staminaSystem.DrainStamina(startSwingCost))
             {
-                AudioManager.instance.PlaySFX("Wind");
                 swingPoint = hit.point; // 맞은 지점을 스윙 포인트로 저장
                 isSwinging = true;
                 playerController.animator.SetBool("isSwinging", true);
