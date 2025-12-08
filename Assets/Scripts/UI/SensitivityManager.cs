@@ -20,7 +20,10 @@ public class SensitivityManager : MonoBehaviour
 
         if(sensitivitySlider != null)
         {
-            sensitivitySlider.value = playerController.mouseSensitivity;
+            if(playerController != null)
+            {
+                sensitivitySlider.value = playerController.mouseSensitivity;
+            }
         }
     }
 

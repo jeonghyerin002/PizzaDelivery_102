@@ -30,6 +30,9 @@ public class PlayerStepSound : MonoBehaviour
 
     void Update()
     {
+        if (playerController == null)
+            return;
+
         if (PauseMenu.isPaused || PhoneOnOff.isPhone)
         {
             if (audioSource.isPlaying) audioSource.Stop();

@@ -66,4 +66,9 @@ public class PauseMenu : MonoBehaviour
     {
         SceneManager.LoadScene("RealMap");
     }
+    public void ResetData()
+    {
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+    }
 }
