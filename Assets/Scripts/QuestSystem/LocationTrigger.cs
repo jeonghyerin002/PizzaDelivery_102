@@ -5,7 +5,8 @@ using System.Linq;
 public enum LocationType
 {
     Pickup,
-    Delivery
+    Delivery,
+    Both
 }
 
 public class LocationTrigger : MonoBehaviour
@@ -13,7 +14,14 @@ public class LocationTrigger : MonoBehaviour
     [Header("장소 설정")]
     public LocationType type;
 
+    public Animator animator;
+
     private List<ActiveQuest> relatedQuests = new List<ActiveQuest>();
+
+    private void Start()
+    {
+        animator = GetComponentInChildren<Animator>();
+    }
 
     public void ActivateTrigger(ActiveQuest quest)
     {
@@ -47,9 +55,18 @@ public class LocationTrigger : MonoBehaviour
                 bool isPickupMatch = (quest.state == QuestState.HeadingToPickup && quest.targetObject == this.gameObject);
                 bool isDeliveryMatch = (quest.state == QuestState.HeadingToDestination && quest.targetObject == this.gameObject);
 
-                if (isPickupMatch || isDeliveryMatch)
+                if (quest.state == QuestState.HeadingToPickup && quest.targetObject == this.gameObject)
                 {
                     QuestManager.instance.OnPlayerReachLocation(quest, this);
+
+                    if (animator != null) animator.SetTrigger("OnPickup");
+                    relatedQuests.Remove(quest);
+                }
+                else if (quest.state == QuestState.HeadingToDestination && quest.targetObject == this.gameObject)
+                {
+                    QuestManager.instance.OnPlayerReachLocation(quest, this);
+
+                    if (animator != null)  animator.SetTrigger("OnDelivery");
                     relatedQuests.Remove(quest);
                 }
             }

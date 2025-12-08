@@ -79,7 +79,7 @@ public class QuestUIEntry : MonoBehaviour
 
         if (myQuest.state == QuestState.HeadingToPickup)
         {
-            statusText.text = $"[픽업] {myQuest.targetObject.name}까지" +
+            statusText.text = $"[픽업] 픽업지 까지" +
                 $"{distance:F0}m";
             statusText.color = Color.yellow;
 
@@ -87,7 +87,7 @@ public class QuestUIEntry : MonoBehaviour
         }
         else
         {
-            statusText.text = $"[배달] {myQuest.targetObject.name}까지" +
+            statusText.text = $"[배달] 배달지 까지" +
                 $"{distance:F0}m";
             statusText.color = Color.green;
 

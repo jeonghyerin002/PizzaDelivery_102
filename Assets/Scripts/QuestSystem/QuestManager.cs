@@ -62,8 +62,8 @@ public class QuestManager : MonoBehaviour
         // 맵의 모든 위치 후보를 찾음
         var allLocs = FindObjectsOfType<LocationTrigger>();
 
-        pickupLocations = allLocs.Where(x => x.type == LocationType.Pickup).ToList();
-        deliveryLocations = allLocs.Where(x => x.type == LocationType.Delivery).ToList();
+        pickupLocations = allLocs.Where(x => x.type == LocationType.Pickup || x.type == LocationType.Both).ToList();
+        deliveryLocations = allLocs.Where(x => x.type == LocationType.Delivery || x.type == LocationType.Both).ToList();
     }
 
 
@@ -174,7 +174,7 @@ public class QuestManager : MonoBehaviour
     public GameObject FindDestinationForQuest(QuestDifficulty difficulty, Vector3 startPosition)
     {
         var potentialDestinations = deliveryLocations
-            .Where(loc => Vector3.Distance(startPosition, loc.transform.position) > 10f) // 너무 가까운 곳 제외
+            .Where(loc => Vector3.Distance(startPosition, loc.transform.position) > 20f) // 너무 가까운 곳 제외
             .ToList();
 
         if (potentialDestinations.Count == 0)

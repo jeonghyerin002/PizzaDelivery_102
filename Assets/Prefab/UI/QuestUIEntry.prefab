@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "[\uD53D\uC5C5]\nOOO\uAE4C\uC9C0\n100m"
+  m_text: "[\uD53D\uC5C5]\n\uBC30\uB2EC\uC9C0 \uAE4C\uC9C0 100m"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4d65503bdee7ca445abdc2d94e071f0c, type: 2}
   m_sharedMaterial: {fileID: -731550204144917313, guid: 4d65503bdee7ca445abdc2d94e071f0c,
@@ -738,7 +738,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -90, y: 0}
+  m_AnchoredPosition: {x: -90, y: 5}
   m_SizeDelta: {x: 90, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8146996153733436157
