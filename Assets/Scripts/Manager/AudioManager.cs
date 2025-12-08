@@ -20,10 +20,7 @@ public class AudioManager : MonoBehaviour
     public AudioSource bgmSource;
     public AudioSource sfxSource;
 
-    public Slider bgmSlider;
-    public Slider sfxSlider;
-    public Slider masterSlider;
-
+    [Header("SFX / BGM")]
     public Sound[] sfxList;
     public Sound[] bgmList;
 
@@ -56,10 +53,6 @@ public class AudioManager : MonoBehaviour
         SetBGMVolume(bgmVol);
         SetSFXVolume(sfxVol);
         SetMasterVolume(masterVol);
-
-        if (bgmSlider != null) bgmSlider.value = bgmVol;
-        if (sfxSlider != null) sfxSlider.value = sfxVol;
-        if (masterSlider != null) masterSlider.value = masterVol;
 
         StartPlaylist();
     }
@@ -122,6 +115,7 @@ public class AudioManager : MonoBehaviour
     //배경음악 재생
     public void PlayBGM(string bgmName)
     {
+        isPlaylistMode = false;
         if (bgmDictionary.ContainsKey(bgmName))
         {
             AudioClip clipToPlay = bgmDictionary[bgmName];
@@ -159,6 +153,7 @@ public class AudioManager : MonoBehaviour
         audioMixer.SetFloat("BGM", db);
 
         PlayerPrefs.SetFloat("BGM_Vol", sliderValue);
+        PlayerPrefs.Save();
     }
 
     public void SetSFXVolume(float sliderValue)
@@ -167,6 +162,7 @@ public class AudioManager : MonoBehaviour
         audioMixer.SetFloat("SFX", db);
 
         PlayerPrefs.SetFloat("SFX_Vol", sliderValue);
+        PlayerPrefs.Save();
     }
 
     public void SetMasterVolume(float sliderValue)
@@ -175,5 +171,6 @@ public class AudioManager : MonoBehaviour
         audioMixer.SetFloat("Master", db);
 
         PlayerPrefs.SetFloat("Master_Vol", sliderValue);
+        PlayerPrefs.Save();
     }
 }

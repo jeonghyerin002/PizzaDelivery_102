@@ -8,20 +8,20 @@ public class PlayerController : MonoBehaviour
     public Camera mainCamera;
     public Transform cameraTransform;
     public Transform groundCheck;
-    public LayerMask groundLayer;
+    public LayerMask groundLayer;       //땅 레이어
     public Animator animator;
     public StaminaSystem staminaSystem;
 
     [Header("지상 움직임 설정")]
-    public float moveSpeed = 10f;
-    public float walkSpeed = 10f;
-    public float runSpeed = 20f;
-    public float jumpForce = 8f;
+    public float moveSpeed = 10f;       //이동 속도
+    public float walkSpeed = 10f;       //걷는 속도
+    public float runSpeed = 20f;        //달리기 속도
+    public float jumpForce = 8f;        //점프 힘
     public Vector3 groundBoxSize = new Vector3(0.4f, 0.1f, 0.4f);
     public float rotationSpeed = 10f;
     public float breakForce = 7f;
     public float airMultiplier = 0.5f;
-    public float runStaminaCost = 15f;
+    public float runStaminaCost = 15f;      //달리기 스테미나 초당 소모량
 
     [HideInInspector] public bool isGrounded;
 
@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
 
     private void CameraRotation()
     {
-        if (PauseMenu.isPaused) return;
+        if (PauseMenu.isPaused) return;     //게임 일시정지 상태면 return
 
         float mouseX = 0f;
         float mouseY = 0f;
@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (PauseMenu.isPaused) return;
+        if (PauseMenu.isPaused) return;     //게임 일시정지 상태면 return
         if (pausePlayer) return;
 
         if (PhoneOnOff.isPhone)
@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        horizontalInput = Input.GetAxis("Horizontal");
+        horizontalInput = Input.GetAxis("Horizontal");      //wasd 입력
         verticalInput = Input.GetAxis("Vertical");
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
@@ -140,10 +140,13 @@ public class PlayerController : MonoBehaviour
 
         if (isTryingToRun)
         {
+            //스테미나 소모 시도
+            //Time.dletaTime을 곱해서 초당 소모량으로 계산
             if (staminaSystem.DrainStamina(runStaminaCost * Time.deltaTime))
                 moveSpeed = runSpeed;
             else
                 moveSpeed = walkSpeed;
+
         }
         else moveSpeed = walkSpeed;
     }
@@ -159,17 +162,10 @@ public class PlayerController : MonoBehaviour
         if (PauseMenu.isPaused) return;
         if (pausePlayer) return;
 
-        // 스윙 중 이동·회전·착지 처리 완전 비활성화
-        if (swinging != null && swinging.isSwinging)
-        {
-            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-            animator.SetBool("isGrounded", true);
-            wasGrounded = false;
-            return;
-        }
-
+        //지상 체크
         isGrounded = Physics.CheckBox(groundCheck.position, groundBoxSize, transform.rotation, groundLayer);
 
+        //이동 처리
         Vector3 cameraForward = mainCamera.transform.forward;
         Vector3 cameraRight = mainCamera.transform.right;
         cameraForward.y = 0;
@@ -179,12 +175,20 @@ public class PlayerController : MonoBehaviour
 
         Vector3 moveDirection = (cameraForward * verticalInput + cameraRight * horizontalInput).normalized;
 
-        animator.SetBool("isGrounded", isGrounded);
+        if (swinging.isSwinging)
+        {
+            animator.SetBool("isGrounded", true);
+        }
+        else
+        {
+            animator.SetBool("isGrounded", isGrounded);
+        }
+
         float horizontalSpeed = new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude;
         animator.SetFloat("moveSpeed", horizontalSpeed);
         animator.SetFloat("fallSpeed", rb.velocity.y);
 
-        if (isGrounded)
+        if (isGrounded && !swinging.isSwinging)
         {
             rb.drag = 1f;
 
@@ -195,8 +199,8 @@ public class PlayerController : MonoBehaviour
                 if (fallSpeed < hardLandVelocity || horizontalSpeed > hardLandMoveSpeed)
                 {
                     animator.ResetTrigger("Jump");
-                    animator.ResetTrigger("Land");
-                    animator.SetTrigger("HardLand");
+                    animator.ResetTrigger("Land");              //다른 애니메이션 리셋
+                    animator.SetTrigger("HardLand");            //구르기 애니메이션
                 }
                 else
                 {
@@ -205,9 +209,9 @@ public class PlayerController : MonoBehaviour
                     animator.SetTrigger("Land");
                 }
 
-                rb.angularVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;      //남은 회전 제거
                 var e = transform.eulerAngles;
-                transform.rotation = Quaternion.Euler(0f, e.y, 0f);
+                transform.rotation = Quaternion.Euler(0f, e.y, 0f);     //기울기 리셋
                 rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             }
 
@@ -222,24 +226,33 @@ public class PlayerController : MonoBehaviour
         else
         {
             rb.drag = 0.3f;
-            rb.constraints = RigidbodyConstraints.FreezeRotationY;
 
-            Vector3 flatVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-            if (flatVel.magnitude < 7)
+            if (wasGrounded)
             {
-                rb.AddForce(moveDirection * moveSpeed * airMultiplier, ForceMode.Acceleration);
+                rb.angularDrag = 2f;        //공중 회전 저항
             }
 
-            if (moveDirection.sqrMagnitude > 0.01f)
+            rb.constraints = RigidbodyConstraints.FreezeRotationY;
+
+            if (!swinging.isSwinging)
             {
-                Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * rotationSpeed);
+                Vector3 flatVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+                if (flatVel.magnitude < 7)
+                {
+                    rb.AddForce(moveDirection * moveSpeed * airMultiplier, ForceMode.Acceleration);
+                }
+
+                if (moveDirection.sqrMagnitude > 0.01f)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * rotationSpeed);
+                }
             }
         }
 
-        float inputMag = Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput);
+        float inputMag = Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput);     //입력 크기
 
-        if (isGrounded && inputMag < 0.01f)
+        if (isGrounded && inputMag < 0.01f)     //브레이크
         {
             Vector3 v = rb.velocity;
             Vector3 hv = new Vector3(v.x, 0f, v.z);

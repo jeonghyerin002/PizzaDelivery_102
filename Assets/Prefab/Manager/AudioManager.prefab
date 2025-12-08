@@ -51,9 +51,6 @@ MonoBehaviour:
   audioMixer: {fileID: 24100000, guid: a2ee69eee2b4a9d42b8f41ca692e4a1a, type: 2}
   bgmSource: {fileID: 4231711391832607566}
   sfxSource: {fileID: 3495242481215854666}
-  bgmSlider: {fileID: 0}
-  sfxSlider: {fileID: 0}
-  masterSlider: {fileID: 0}
   sfxList:
   - name: Challenge1
     clip: {fileID: 8300000, guid: b35cf6a1a74f1ed48b6976619146129e, type: 3}
