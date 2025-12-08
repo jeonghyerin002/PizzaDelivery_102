@@ -30,6 +30,9 @@ public class AudioManager : MonoBehaviour
     private Dictionary<string, AudioClip> sfxDictionary = new Dictionary<string, AudioClip>();
     private Dictionary<string, AudioClip> bgmDictionary = new Dictionary<string, AudioClip>();
 
+    private bool isPlaylistMode = false; // 플레이리스트 모드인지 확인
+    private int currentTrackIndex = 0;   // 현재 재생 중인 트랙 번호
+
     private void Awake()
     {
         if (instance == null)
@@ -58,7 +61,48 @@ public class AudioManager : MonoBehaviour
         if (sfxSlider != null) sfxSlider.value = sfxVol;
         if (masterSlider != null) masterSlider.value = masterVol;
 
-        PlayBGM("mainbgm");
+        StartPlaylist();
+    }
+
+    private void Update()
+    {
+        if (isPlaylistMode && !bgmSource.isPlaying && bgmSource.clip != null)
+        {
+            // 다음 곡 재생
+            PlayNextTrack();
+        }
+    }
+
+    public void StartPlaylist()
+    {
+        if (bgmList.Length == 0) return;
+
+        isPlaylistMode = true;
+        currentTrackIndex = 0; // 0번부터 시작
+
+        PlayPlaylistTrack(); // 첫 곡 재생
+    }
+
+    private void PlayPlaylistTrack()
+    {
+        if (currentTrackIndex >= bgmList.Length) currentTrackIndex = 0;
+
+        AudioClip clip = bgmList[currentTrackIndex].clip;
+
+        bgmSource.clip = clip;
+        bgmSource.loop = false;
+        bgmSource.Play();
+    }
+    private void PlayNextTrack()
+    {
+        currentTrackIndex++; // 번호 증가
+
+        if (currentTrackIndex >= bgmList.Length)
+        {
+            currentTrackIndex = 0;
+        }
+
+        PlayPlaylistTrack();
     }
 
     private void InitializeSoundLibrary()

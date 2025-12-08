@@ -8,6 +8,7 @@ public class QuestMarker : MonoBehaviour
     public RectTransform markerContainer;
     public TextMeshProUGUI distanceText;
     public TextMeshProUGUI labelText;
+    public Image markerIcon;
 
     [Header("설정")]
     public Vector3 offset = new Vector3(0, 1.5f, 0); //머리 위 얼마나 띄울지
@@ -72,5 +73,13 @@ public class QuestMarker : MonoBehaviour
         }
 
         if (distanceText != null) distanceText.color = color;
+    }
+
+    public void SetIcon(Sprite iconSprite)
+    {
+        if (markerIcon != null && iconSprite != null)
+        {
+            markerIcon.sprite = iconSprite;
+        }
     }
 }

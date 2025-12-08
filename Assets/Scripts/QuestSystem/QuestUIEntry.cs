@@ -31,6 +31,10 @@ public class QuestUIEntry : MonoBehaviour
             {
                 myMarker.ShowMarker(myQuest.targetObject.transform);
             }
+            if (quest.data.icon != null)
+            {
+                myMarker.SetIcon(quest.data.icon);
+            }
         }
 
         RefreshDisplay();

@@ -127,6 +127,7 @@ MonoBehaviour:
   markerContainer: {fileID: 8161502248634848730}
   distanceText: {fileID: 9214940652550516967}
   labelText: {fileID: 6752399696588108008}
+  markerIcon: {fileID: 151681074020730561}
   offset: {x: 0, y: 1.5, z: 0}
   target: {fileID: 0}
 --- !u!1 &5438323641874567322

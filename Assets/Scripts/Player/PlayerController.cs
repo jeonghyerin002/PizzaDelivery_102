@@ -76,8 +76,6 @@ public class PlayerController : MonoBehaviour
         {
             mainCamera = Camera.main;
         }
-
-        AudioManager.instance.PlayBGM("main");
     }
 
     private void LateUpdate()
