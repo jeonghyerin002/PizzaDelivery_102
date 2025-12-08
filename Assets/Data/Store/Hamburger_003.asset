@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf12e2ef445bee142958979dd9cc904f, type: 3}
-  m_Name: New Store 6
+  m_Name: Hamburger_003
   m_EditorClassIdentifier: 
   questName: "\uD584\uBC84\uAC70"
   icon: {fileID: 0}
   pickupTimeLimit: 30
   deliveryTimeLimit: 60
   reward: 100
-  difficulty: 0
-  maxDurability: 200
+  difficulty: 2
