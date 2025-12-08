@@ -16,6 +16,9 @@ public class WindSound : MonoBehaviour
 
     void Update()
     {
+        if (windSource == null)
+            return;
+
         if (!isSwinging)
         {
             windSource.volume = Mathf.Lerp(windSource.volume, 0, Time.deltaTime * 5f);

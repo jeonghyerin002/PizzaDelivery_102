@@ -115,6 +115,16 @@ public class QuestManager : MonoBehaviour
 
     public void OnPlayerReachLocation(ActiveQuest quest, LocationTrigger location)
     {
+        if (!activeQuests.Contains(quest))
+        {
+            Debug.LogWarning("이미 종료된 퀘스트");
+
+            // (선택사항) 건물의 기억에서도 지워주면 더 깔끔함
+            if (location != null) location.RemoveQuest(quest);
+
+            return;
+        }
+
         if (quest.state == QuestState.HeadingToPickup)
         {
             GameObject finalDest = null;
@@ -147,6 +157,8 @@ public class QuestManager : MonoBehaviour
             Debug.Log($"배달 완료! 보상: {quest.data.reward}");
             activeQuests.Remove(quest);
             myData.DeliveryDone++;
+            BadgeManager.Instance.CheckDeliverDone();
+
             myData.Coin += quest.data.reward;
 
             // 배달 성공
@@ -232,12 +244,20 @@ public class QuestManager : MonoBehaviour
                 if(quest.currentDurability <= 0)
                 {
                     Debug.Log("퀘스트 실패 물건 파손");
+                    if (quest.targetObject != null)
+                    {
+                        LocationTrigger trigger = quest.targetObject.GetComponent<LocationTrigger>();
+                        if (trigger != null) trigger.RemoveQuest(quest);
+                    }
+
                     activeQuests.RemoveAt(i);
                     myData.DeliveryFail++;
+                    BadgeManager.Instance.CheckDeliverDone();
 
-                    if(activeQuests.Count == 0 && isEmergencyActive)
+                    if (activeQuests.Count == 0 && isEmergencyActive)
                     {
                         Debug.Log("긴급 퀘스트 실패 물건 파손");
+                        BadgeManager.Instance.CheckDeliverDone();
                         EndEmergencyQuest();
                     }
                 }

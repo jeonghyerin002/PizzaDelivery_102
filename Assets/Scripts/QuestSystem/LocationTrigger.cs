@@ -28,6 +28,14 @@ public class LocationTrigger : MonoBehaviour
         relatedQuests.Clear();
     }
 
+    public void RemoveQuest(ActiveQuest quest)
+    {
+        if (relatedQuests.Contains(quest))
+        {
+            relatedQuests.Remove(quest);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && relatedQuests.Count > 0)

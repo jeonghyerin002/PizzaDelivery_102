@@ -44,6 +44,9 @@ public class BadgeManager : MonoBehaviour
 
             // 획득 알림 UI 표시
             ShowBadgeNotification(badgeToUnlock);
+
+            //sfx
+            AudioManager.instance.PlaySFX("Challenge");
         }
     }
 
@@ -72,11 +75,21 @@ public class BadgeManager : MonoBehaviour
 
     public void CheckDeliverDone()
     {
-        int currentDeliveryDone = myData.DeliveryDone;
+        int currentDeliveryDone = myData.DeliveryDone;      //배달 데이터 조회
+        int currentDeliveryFail = myData.DeliveryFail;
+
         if (currentDeliveryDone >= 1)
             UnlockBadge(10);
-        if (currentDeliveryDone >= 5)
+        if (currentDeliveryDone >= 20)
             UnlockBadge(11);
+        if (currentDeliveryDone >= 50)
+            UnlockBadge(12);
 
+        if (currentDeliveryFail >= 10)
+            UnlockBadge(20);
+        if (currentDeliveryFail >= 20)
+            UnlockBadge(21);
+        if (currentDeliveryFail >= 50)
+            UnlockBadge(22);
     }
 }

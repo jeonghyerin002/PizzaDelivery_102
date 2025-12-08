@@ -129,6 +129,8 @@ public class Swinging : MonoBehaviour
     {
         if (staminaSystem.currentStamina <= 0) return;      //스테미나 없으면 스윙 불가
         // 카메라 정면으로 Raycast 발사
+        AudioManager.instance.PlaySFX("SwingStart");
+
         RaycastHit hit;
         if (Physics.Raycast(playerController.mainCamera.transform.position, playerController.mainCamera.transform.forward, out hit, maxSwingDistance, swingableLayer))
         {
@@ -171,6 +173,8 @@ public class Swinging : MonoBehaviour
 
     void StopSwing()
     {
+        AudioManager.instance.PlaySFX("SwingEnd");
+
         lineRenderer.enabled = false;
         isSwinging = false;
         playerController.animator.SetBool("isSwinging", false);

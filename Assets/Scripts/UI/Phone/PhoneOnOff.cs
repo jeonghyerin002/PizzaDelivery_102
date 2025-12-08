@@ -28,15 +28,13 @@ public class PhoneOnOff : MonoBehaviour
         {
             if (!isPhone && !isMoving)
             {
+                AudioManager.instance.PlaySFX("Phone");
                 ShowPanel();
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if (isPhone && !isMoving)
+            else if (isPhone && !isMoving)
             {
                 HidePanel();
+                AudioManager.instance.PlaySFX("ClickBack");
             }
         }
     }

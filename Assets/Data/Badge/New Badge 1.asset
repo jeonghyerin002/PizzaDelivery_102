@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: New Badge 1
   m_EditorClassIdentifier: 
   badgeID: 11
-  badgeName: "\uD560\uB9CC\uD55C\uB370?"
-  badgeIcon: {fileID: 0}
+  badgeName: "\uBC30\uB2EC 20\uBC88"
+  badgeIcon: {fileID: 21300000, guid: 5f3bf64b3a67531448f3ce0bb5384575, type: 3}
   privateBadge: 0
-  badgeDescription: "\uBC30\uB2EC 5\uBC88 \uC644\uB8CC"
+  badgeDescription: "\uBC30\uB2EC 20\uBC88 \uC644\uB8CC"
