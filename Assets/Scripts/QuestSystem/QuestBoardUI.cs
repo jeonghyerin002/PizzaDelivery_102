@@ -42,7 +42,7 @@ public class QuestBoardUI : MonoBehaviour
         if (allQuestData.Count == 0) return;
 
         StoreSO randomData = allQuestData[Random.Range(0, allQuestData.Count)];
-        LocationTrigger randomPickup = QuestManager.instance.FindRandomPickupLocation();
+        LocationTrigger randomPickup = QuestManager.instance.FindPickupByDifficulty(randomData.difficulty, QuestManager.instance.playerTransform.position);
         if (randomPickup == null) return;
 
         float dist = Vector3.Distance(QuestManager.instance.playerTransform.position, randomPickup.transform.position);

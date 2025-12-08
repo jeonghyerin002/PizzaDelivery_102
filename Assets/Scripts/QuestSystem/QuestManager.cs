@@ -38,9 +38,15 @@ public class QuestManager : MonoBehaviour
     public Transform playerTransform; // 플레이어 위치 계산용
     public QuestBoardUI questBoard;
 
-    [Header("난이도 설정")]
-    public float easyMaxDistance = 100f;
-    public float mediumMaxDistance = 300f;
+    [Header("난이도별 픽업지 설정")]
+    public float pickupEasyMaxDistance = 70f;
+    public float pickupMediumMaxDistance = 150f;
+    public float pickupMaxDistance = 200f;
+
+    [Header("난이도별 배달지 설정")]
+    public float easyMaxDistance = 100;
+    public float mediumMaxDistance = 300;
+    public float maxDistance = 400;
     public int maxActiveQuests = 3; //최대 수락 가능 개수
 
     [Header("퀘스트 관리")]
@@ -200,7 +206,7 @@ public class QuestManager : MonoBehaviour
             {
                 case QuestDifficulty.Easy: isMatch = distance <= easyMaxDistance; break;
                 case QuestDifficulty.Medium: isMatch = distance > easyMaxDistance && distance <= mediumMaxDistance; break;
-                case QuestDifficulty.Hard: isMatch = distance > mediumMaxDistance; break;
+                case QuestDifficulty.Hard: isMatch = distance > mediumMaxDistance && distance <= maxDistance; break;
             }
 
             if (isMatch) validTargets.Add(dest.gameObject);
@@ -213,19 +219,45 @@ public class QuestManager : MonoBehaviour
         return potentialDestinations[Random.Range(0, potentialDestinations.Count)].gameObject;
     }
 
-    public LocationTrigger FindRandomPickupLocation()
+    public LocationTrigger FindPickupByDifficulty(QuestDifficulty difficulty, Vector3 playerPos)
     {
-        if (pickupLocations.Count == 0)
+        if (pickupLocations.Count == 0) return null;
+
+        List<LocationTrigger> validPickups = new List<LocationTrigger>();
+
+        foreach (var shop in pickupLocations)
         {
-            Debug.LogError("픽업지가 없습니다");
-            return null;
+            float dist = Vector3.Distance(playerPos, shop.transform.position);
+            bool isMatch = false;
+            
+
+            //픽업 거리 계산
+            switch (difficulty)
+            {
+                case QuestDifficulty.Easy:
+                    isMatch = dist <= pickupEasyMaxDistance;
+                    break;
+
+                case QuestDifficulty.Medium:
+                    isMatch = dist > pickupEasyMaxDistance && dist <= pickupMediumMaxDistance;
+                    break;
+
+                case QuestDifficulty.Hard:
+                    isMatch = dist > pickupMediumMaxDistance && dist <= pickupMaxDistance;
+                    break;
+            }
+
+            if (isMatch) validPickups.Add(shop);
         }
 
-        // 0부터 리스트 크기 사이의 랜덤 숫자를 뽑음
-        int randomIndex = Random.Range(0, pickupLocations.Count);
-
-        // 해당 번호의 장소를 반환
-        return pickupLocations[randomIndex];
+        // 조건에 맞는 가게가 있으면 거기서 뽑기
+        if (validPickups.Count > 0)
+        {
+            return validPickups[Random.Range(0, validPickups.Count)];
+        }
+        //조건에 안맞는게 없으면 랜덤
+        Debug.Log("조건에 맞는 픽업지가 없습니다");
+        return pickupLocations[Random.Range(0, pickupLocations.Count)];
     }
 
     public void PackageDamage(float damageAmount)
