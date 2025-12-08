@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5647578095936165078}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Landmark_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,6 +111,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: LandMark_001
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3a377d5882e9ebd4eb4526fee0abc27a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 3a377d5882e9ebd4eb4526fee0abc27a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -204,6 +214,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LandMark_001 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3a377d5882e9ebd4eb4526fee0abc27a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 3a377d5882e9ebd4eb4526fee0abc27a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -301,8 +321,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 03703261cf07429459f9a73868d0d116,
         type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 03703261cf07429459f9a73868d0d116,
+        type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 03703261cf07429459f9a73868d0d116,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -398,6 +428,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: LandMark_001 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3a377d5882e9ebd4eb4526fee0abc27a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 3a377d5882e9ebd4eb4526fee0abc27a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -491,6 +531,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LandMark_001 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3a377d5882e9ebd4eb4526fee0abc27a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 3a377d5882e9ebd4eb4526fee0abc27a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -586,6 +636,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: LandMark_001 (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3a377d5882e9ebd4eb4526fee0abc27a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 3a377d5882e9ebd4eb4526fee0abc27a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -680,6 +740,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: LandMark_003 (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 741655f561c85ac43922c5fbea299fae,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 741655f561c85ac43922c5fbea299fae,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -758,6 +828,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LandMark_002
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 82a4c08319560aa4491367bc12ff98ce,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 82a4c08319560aa4491367bc12ff98ce,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -853,6 +933,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: LandMark_003
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 741655f561c85ac43922c5fbea299fae,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 741655f561c85ac43922c5fbea299fae,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -931,6 +1021,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LandMark_003 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 741655f561c85ac43922c5fbea299fae,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 741655f561c85ac43922c5fbea299fae,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1026,6 +1126,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: LandMark_003 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 741655f561c85ac43922c5fbea299fae,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 741655f561c85ac43922c5fbea299fae,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1119,6 +1229,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LandMark_001 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 3a377d5882e9ebd4eb4526fee0abc27a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 3a377d5882e9ebd4eb4526fee0abc27a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
