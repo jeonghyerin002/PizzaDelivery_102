@@ -47,16 +47,16 @@ public class PlayerController : MonoBehaviour
     public float hardLandVelocity = -20f;
     public float hardLandMoveSpeed = 20f;
 
+    public bool pausePlayer = false;
+
     private const string SensitivityKey = "MouseSensitivity";
     private float defaultSensitivity = 0.3f;
-
-    [HideInInspector] public static bool pausePlayer = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         swinging = GetComponent<Swinging>();
-        animator = GetComponentInChildren<Animator>();
+        //animator = GetComponentInChildren<Animator>();
         if (staminaSystem == null) staminaSystem = GetComponent<StaminaSystem>();
 
         _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
@@ -119,7 +119,10 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (PauseMenu.isPaused) return;     //게임 일시정지 상태면 return
-        if (pausePlayer) return;
+        if (pausePlayer)
+        {
+            return;
+        }
 
         if (PhoneOnOff.isPhone)
         {

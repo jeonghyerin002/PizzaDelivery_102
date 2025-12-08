@@ -1,6 +1,8 @@
+using GLTFast.Schema;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class ActiveQuest
@@ -70,6 +72,32 @@ public class QuestManager : MonoBehaviour
 
         pickupLocations = allLocs.Where(x => x.type == LocationType.Pickup || x.type == LocationType.Both).ToList();
         deliveryLocations = allLocs.Where(x => x.type == LocationType.Delivery || x.type == LocationType.Both).ToList();
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        GameObject playerobj = GameObject.FindGameObjectWithTag("OriginPlayer");
+        playerTransform = playerobj.transform;
+
+        var allLocs = FindObjectsOfType<LocationTrigger>();
+
+        pickupLocations = allLocs.Where(x => x.type == LocationType.Pickup || x.type == LocationType.Both).ToList();
+        deliveryLocations = allLocs.Where(x => x.type == LocationType.Delivery || x.type == LocationType.Both).ToList();
+
+        if (questBoard == null)
+        {
+            questBoard = FindObjectOfType<QuestBoardUI>();
+        }
     }
 
 

@@ -60,6 +60,7 @@ public class Swinging : MonoBehaviour
     {
         if (PauseMenu.isPaused) return;      //게임 일시정지 상태면 return
         if (PhoneOnOff.isPhone) return;     //휴대폰이 켜지면 return
+        if (playerController.pausePlayer) return;
         // 마우스 왼쪽 버튼 클릭 시 스윙 시작
         if (Input.GetMouseButtonDown(0))
         {
@@ -83,6 +84,8 @@ public class Swinging : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(playerController.pausePlayer) return;
+
         // 스윙 중에만 공중 컨트롤 적용
         if (springJoint != null && !playerController.isGrounded)
         {

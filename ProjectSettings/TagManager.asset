@@ -9,6 +9,8 @@ TagManager:
   - QuestDestination
   - Building
   - Ground
+  - CutScene
+  - OriginPlayer
   layers:
   - Default
   - TransparentFX
