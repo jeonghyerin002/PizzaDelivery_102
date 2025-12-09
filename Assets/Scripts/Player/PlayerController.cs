@@ -130,8 +130,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        horizontalInput = Input.GetAxis("Horizontal");      //wasd 입력
-        verticalInput = Input.GetAxis("Vertical");
+        horizontalInput = Input.GetAxisRaw("Horizontal");      //wasd 입력
+        verticalInput = Input.GetAxisRaw("Vertical");
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {

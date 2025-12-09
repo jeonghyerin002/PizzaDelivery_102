@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   badgeID: 30
   badgeName: "\uAE34\uAE09 \uD018\uC2A4\uD2B8"
-  badgeIcon: {fileID: 0}
+  badgeIcon: {fileID: 21300000, guid: 3c9b7306f3bfa4744a7eb17dac6d3eda, type: 3}
   privateBadge: 0
   badgeDescription: "\uAE34\uAE09 \uD018\uC2A4\uD2B8\uB97C \uBB34\uC0AC\uD788 \uB2EC\uC131\uD588\uC5B4\uC694!"
