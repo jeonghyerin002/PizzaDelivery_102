@@ -89,7 +89,7 @@ public class BadgeManager : MonoBehaviour
         int currentDeliveryDone = myData.DeliveryDone;      //배달 데이터 조회
         int currentDeliveryFail = myData.DeliveryFail;
 
-        if (currentDeliveryDone >= 1)
+        if (currentDeliveryDone >= 10)
             UnlockBadge(10);
         if (currentDeliveryDone >= 20)
             UnlockBadge(11);

@@ -19,7 +19,19 @@ public class QuestUIEntry : MonoBehaviour
         myQuest = quest;
 
         if (iconImage != null) iconImage.sprite = quest.data.icon;
-        if (titleText != null) titleText.text = quest.data.questName;
+        if (titleText != null)
+        {
+            titleText.text = quest.data.questName;
+
+            if (QuestManager.isEmergencyActive)
+            {
+                titleText.color = Color.red;
+            }
+            else
+            {
+                titleText.color = Color.white;
+            }
+        }
 
         // 마커 생성
         if (markerPrefab != null && markerParent != null)
@@ -79,8 +91,8 @@ public class QuestUIEntry : MonoBehaviour
 
         if (myQuest.state == QuestState.HeadingToPickup)
         {
-            statusText.text = $"[픽업] 픽업지 까지" +
-                $"{distance:F0}m";
+            statusText.text = $"[픽업]" +
+                $"픽업지 까지 {distance:F0}m";
             statusText.color = Color.yellow;
 
             if (myMarker != null) myMarker.SetLabel("[픽업]", Color.yellow);

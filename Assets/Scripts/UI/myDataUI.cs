@@ -29,7 +29,7 @@ public class myDataUI : MonoBehaviour
     public void UpdateUI()
     {
         if (coinText != null)
-            coinText.text = $"코인: {myData.Coin}";
+            coinText.text = $"{myData.Coin}";
 
         if (deliveryDoneText != null)
             deliveryDoneText.text = $"배달 완료: {myData.DeliveryDone}";

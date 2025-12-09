@@ -74,6 +74,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: eae1f15e96203424bb8e2e60dacb4518, type: 3}
   - name: UIEnter
     clip: {fileID: 8300000, guid: 16665219ccb1b894fa095a180d90b719, type: 3}
+  - name: Emergency
+    clip: {fileID: 8300000, guid: 084626cd0a64d4841b216ef6219e0631, type: 3}
   bgmList:
   - name: 1
     clip: {fileID: 8300000, guid: 95848cb075022c24aa8ae17f810a6bb8, type: 3}

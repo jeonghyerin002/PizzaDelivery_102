@@ -53,6 +53,7 @@ public class Swinging : MonoBehaviour
         playerController = GetComponent<PlayerController>();
         staminaSystem = GetComponent<StaminaSystem>();
 
+
         targetFOV = defaultFOV;
         ApplyStats();
     }

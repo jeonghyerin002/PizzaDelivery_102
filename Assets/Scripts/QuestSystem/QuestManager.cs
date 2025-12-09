@@ -371,6 +371,7 @@ public class QuestManager : MonoBehaviour
         pickupLoc.ActivateTrigger(emergencyQuest);
 
         Debug.LogWarning($"긴급 퀘스트 발동! '{questData.questName}' 시작됨.");
+        AudioManager.instance.PlaySFX("Emergency");
         onQuestStateChanged?.Invoke();
     }
     private void EndEmergencyQuest()

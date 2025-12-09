@@ -12,6 +12,7 @@ public class QuestMarker : MonoBehaviour
 
     [Header("설정")]
     public Vector3 offset = new Vector3(0, 1.5f, 0); //머리 위 얼마나 띄울지
+    public float borderMargin = 20f;    //화면 끝에서 얼마나 안쪽으로 들여보낼지
 
     public Transform target;
     private Camera mainCamera;
@@ -27,27 +28,43 @@ public class QuestMarker : MonoBehaviour
     {
         if (!isActive || target == null) return;
 
-        Vector3 screenPos = mainCamera.WorldToScreenPoint(target.position + offset);
+        Vector2 screenCenter = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+        Vector3 targetPos = target.position + offset;
+        Vector3 screenPos = mainCamera.WorldToScreenPoint(targetPos);
 
-        //카메라 뒤쪽에 있는경우
-        if (screenPos.z < 0)
+        bool isBehind = screenPos.z < 0;
+
+        Vector2 dir = (Vector2)screenPos - screenCenter;
+
+        if (isBehind)
         {
-            if (markerContainer.gameObject.activeSelf)
-                markerContainer.gameObject.SetActive(false);
+            dir *= -1;
         }
-        else
+
+        float maxX = screenCenter.x - borderMargin;
+        float maxY = screenCenter.y - borderMargin;
+
+        // 현재 벡터가 화면 박스를 얼마나 벗어났는지 비율 계산
+        float factorX = Mathf.Abs(dir.x) / maxX;
+        float factorY = Mathf.Abs(dir.y) / maxY;
+        float maxFactor = Mathf.Max(factorX, factorY);
+
+        if (isBehind || maxFactor > 1f)
         {
-            if (!markerContainer.gameObject.activeSelf)
-                markerContainer.gameObject.SetActive(true);
+            dir /= maxFactor;
+        }
 
-            markerContainer.position = screenPos;
+        // 좌표 적용
+        if (!markerContainer.gameObject.activeSelf)
+            markerContainer.gameObject.SetActive(true);
 
-            //거리 계산
-            if (distanceText != null && QuestManager.instance != null)
-            {
-                float dist = Vector3.Distance(QuestManager.instance.playerTransform.position, target.position);
-                distanceText.text = $"{dist:F0}m";
-            }
+        markerContainer.position = screenCenter + dir;
+
+        // 8. 거리 텍스트 업데이트
+        if (distanceText != null && QuestManager.instance != null)
+        {
+            float dist = Vector3.Distance(QuestManager.instance.playerTransform.position, targetPos);
+            distanceText.text = $"{dist:F0}m";
         }
     }
 

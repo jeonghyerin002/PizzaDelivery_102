@@ -15,5 +15,15 @@ public class Event : MonoBehaviour
         {
             QuestManager.instance.TriggerEmergencyQuest(emergencyData, specificPickup, specificDest);
         }
+
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            BadgeManager.Instance.CheckDeliverDone();
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            myData.DeliveryDone++;
+        }
     }
 }
