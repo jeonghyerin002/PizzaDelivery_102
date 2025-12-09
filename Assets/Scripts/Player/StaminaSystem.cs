@@ -11,7 +11,7 @@ public class StaminaSystem : MonoBehaviour
     public float regenDelay = 1.5f;       // 행동 멈춘 후 회복 시작 딜레이
 
     [HideInInspector]
-    public bool unlimitedStamina = false;
+    public static bool unlimitedStamina = false;
 
     [Header("UI")]
     public Slider staminaSlider;
@@ -96,8 +96,10 @@ public class StaminaSystem : MonoBehaviour
         }
     }
 
-    public IEnumerator UnlimitedStamina(float duration)
+    public IEnumerator UnlimitedStamina(float duration, Sprite sprite)
     {
+        Image image = unlimitedPanel.GetComponentInChildren<Image>();
+        image.sprite = sprite;
         Debug.Log($"스테미나 {duration}초 동안 무제한");
         unlimitedStamina = true;
         unlimitedPanel.SetActive(true);

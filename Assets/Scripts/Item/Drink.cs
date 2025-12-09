@@ -9,6 +9,8 @@ public class Drink : MonoBehaviour
     private StaminaSystem staminaSystem;
     public float chaseSpeed = 3f;
     private Transform playerTarget;
+    public MeshRenderer meshRenderer;
+    public Sprite sprite;
     private void Start()
     {
         staminaSystem = GameObject.Find("Player").GetComponent<StaminaSystem>();
@@ -34,8 +36,15 @@ public class Drink : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("플레이어와 충돌");
-            StartCoroutine(staminaSystem.UnlimitedStamina(duration));
-            Destroy(gameObject);
+            StartCoroutine(Stamina());
         }
+    }
+
+    IEnumerator Stamina()
+    {
+        meshRenderer.enabled = false;
+        StartCoroutine(staminaSystem.UnlimitedStamina(duration, sprite));
+        yield return new WaitForSeconds(duration);
+        Destroy(gameObject);
     }
 }
