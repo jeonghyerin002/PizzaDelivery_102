@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EmergencyPlace : MonoBehaviour
-{    public void OnTriggerEnter(Collider other)
+{
+    public bool isArrive = false;
+
+    public void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Player"))
         {
-            Debug.Log("플레이어 감지");
             Arrive();
         }
 
@@ -20,6 +22,7 @@ public class EmergencyPlace : MonoBehaviour
         {
             if (quest.state == QuestState.HeadingToDestination)
             {
+                isArrive = true;
                 Debug.Log("긴급 퀘스트 도착지 감지됨!");
                 QuestManager.instance.OnPlayerReachLocation(quest, null);
             }

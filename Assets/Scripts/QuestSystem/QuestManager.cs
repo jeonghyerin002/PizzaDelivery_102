@@ -39,6 +39,7 @@ public class QuestManager : MonoBehaviour
     public static QuestManager instance; // 싱글톤 인스턴스
     public Transform playerTransform; // 플레이어 위치 계산용
     public QuestBoardUI questBoard;
+    public EmergencyTrigger emergencyTrigger;
 
     [Header("난이도별 픽업지 설정")]
     public float pickupEasyMaxDistance = 70f;
@@ -97,6 +98,10 @@ public class QuestManager : MonoBehaviour
         if (questBoard == null)
         {
             questBoard = FindObjectOfType<QuestBoardUI>();
+        }
+        if (emergencyTrigger == null)
+        {
+            emergencyTrigger = FindObjectOfType<EmergencyTrigger>();
         }
     }
 
@@ -192,6 +197,8 @@ public class QuestManager : MonoBehaviour
             activeQuests.Remove(quest);
             myData.DeliveryDone++;
             BadgeManager.Instance.CheckDeliverDone();
+            if (myData.DeliveryDone >= 50 && !BadgeManager.Instance.IsBadgeUnlocked(30))
+                emergencyTrigger.EmergencyQuest();
 
             myData.Coin += quest.data.reward;
 
@@ -200,6 +207,7 @@ public class QuestManager : MonoBehaviour
             {
                 EndEmergencyQuest();
                 Debug.Log("긴급 상황 해제. 정상 영업 재개.");
+                BadgeManager.Instance.UnlockBadge(30);
             }
         }
         onQuestStateChanged?.Invoke();

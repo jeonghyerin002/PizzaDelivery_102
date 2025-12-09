@@ -10,19 +10,20 @@ public class CutScene : MonoBehaviour
     private PlayableDirector pd;
     public TimelineAsset[] ta;
     public PlayerController playerController;
+    public EmergencyPlace emergencyPlace;
 
     // Start is called before the first frame update
     void Start()
     {
         pd = GetComponent<PlayableDirector>();
         playerController = GetComponent<PlayerController>();
+        emergencyPlace = FindObjectOfType<EmergencyPlace>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "CutScene")
+        if (other.tag == "CutScene" && emergencyPlace.isArrive == true)
         {
-
             pd.Play();
             StartCoroutine(PausePlayer());
 
