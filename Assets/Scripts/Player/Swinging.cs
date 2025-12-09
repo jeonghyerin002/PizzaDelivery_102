@@ -12,6 +12,7 @@ public class Swinging : MonoBehaviour
     public StaminaSystem staminaSystem;
     public CinemachineVirtualCamera cam;
     public WindSound windSound;
+    public AudioSource rewindSound;
 
     [HideInInspector]
     public bool isSwinging = false;
@@ -106,7 +107,7 @@ public class Swinging : MonoBehaviour
             playerRigidbody.AddForce(forceDirection * airControlForce, ForceMode.Acceleration);
         }
 
-        if (Input.GetMouseButton(1)) //줄 감기
+        if (springJoint != null && Input.GetMouseButton(1)) //줄 감기
         {
             if (springJoint != null)
             {
@@ -117,10 +118,21 @@ public class Swinging : MonoBehaviour
 
                     Vector3 dirToPoint = (swingPoint - hand.position).normalized;
                     playerRigidbody.AddForce(dirToPoint * swingPull, ForceMode.Acceleration);
+
+                    if (!rewindSound.isPlaying)
+                    {
+                        rewindSound.Play();
+                    }
+                }
+                else
+                {
+                    if (rewindSound.isPlaying) rewindSound.Stop();
                 }
             }
-
-
+        }
+        else
+        {
+            if (rewindSound.isPlaying) rewindSound.Stop();
         }
     }
     void LateUpdate()
