@@ -57,6 +57,7 @@ public class UpgradeManager : MonoBehaviour
         if (myData.maxSwingDistanceLevel >= 10)
         {
             ShowMassage("더이상 업그레이드 할 수 없습니다!", false);
+            AudioManager.instance.PlaySFX("Fail");
             return;
         }
         else if (myData.Coin >= cost) // 돈이 충분한지 확인
@@ -67,10 +68,12 @@ public class UpgradeManager : MonoBehaviour
             swinging.ApplyStats();
             UpdateUI();
             ShowMassage("업그레이드 성공!", true);
+            AudioManager.instance.PlaySFX("Done");
         }
         else
         {
             ShowMassage("코인이 부족합니다!", false);
+            AudioManager.instance.PlaySFX("Fail");
         }
     }
     public void BuymaxSwingDistanceUpgrade()
@@ -80,6 +83,7 @@ public class UpgradeManager : MonoBehaviour
         if(myData.maxSwingDistanceLevel >= 10)
         {
             ShowMassage("더이상 업그레이드 할 수 없습니다!", false);
+            AudioManager.instance.PlaySFX("Fail");
             return;
         }
         else if (myData.Coin >= cost) // 돈이 충분한지 확인
@@ -90,10 +94,12 @@ public class UpgradeManager : MonoBehaviour
             swinging.ApplyStats();
             UpdateUI();
             ShowMassage("업그레이드 성공!", true);
+            AudioManager.instance.PlaySFX("Done");
         }
         else
         {
             ShowMassage("코인이 부족합니다!", false);
+            AudioManager.instance.PlaySFX("Fail");
         }
     }
     public void BuymaxStaminaUpgrade()
@@ -103,6 +109,7 @@ public class UpgradeManager : MonoBehaviour
         if (myData.maxSwingDistanceLevel >= 10)
         {
             ShowMassage("더이상 업그레이드 할 수 없습니다!", false);
+            AudioManager.instance.PlaySFX("Fail");
             return;
         }
         else if (myData.Coin >= cost) // 돈이 충분한지 확인
@@ -113,10 +120,12 @@ public class UpgradeManager : MonoBehaviour
             staminaSystem.ApplyStats();
             UpdateUI();
             ShowMassage("업그레이드 성공!", true);
+            AudioManager.instance.PlaySFX("Done");
         }
         else
         {
             ShowMassage("코인이 부족합니다!", false);
+            AudioManager.instance.PlaySFX("Fail");
         }
     }
 

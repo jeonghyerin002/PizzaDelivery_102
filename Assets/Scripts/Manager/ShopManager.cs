@@ -68,6 +68,7 @@ public class ShopManager : MonoBehaviour
         if (StaminaSystem.unlimitedStamina)
         {
             ShowMessage("이미 효과를 사용하고 있습니다", Color.red);
+            AudioManager.instance.PlaySFX("Fail");
             return;
         }
 
@@ -78,11 +79,13 @@ public class ShopManager : MonoBehaviour
             myData.Coin -= cost;
 
             ShowMessage("구매 완료", Color.green);
+            AudioManager.instance.PlaySFX("Done");
             SpawnDeliveryDrone(itemPrefab);
         }
         else
         {
             ShowMessage("돈이 부족합니다!", Color.red);
+            AudioManager.instance.PlaySFX("Fail");
         }
     }
     private void ShowMessage(string msg, Color color)

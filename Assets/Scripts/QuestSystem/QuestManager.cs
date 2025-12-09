@@ -118,6 +118,7 @@ public class QuestManager : MonoBehaviour
             {
                 Debug.Log($"'{activeQuests[i].data.questName}' 퀘스트 시간 초과!");
                 myData.DeliveryFail++;
+                AudioManager.instance.PlaySFX("QuestFailed");
                 activeQuests.RemoveAt(i);
 
                 if (activeQuests.Count == 0 && isEmergencyActive)
@@ -125,6 +126,7 @@ public class QuestManager : MonoBehaviour
                     EndEmergencyQuest();
                     Debug.Log("긴급 퀘스트 시간 초과");
                     myData.DeliveryFail++;
+                    AudioManager.instance.PlaySFX("QuestFailed");
                 }
 
                 onQuestStateChanged?.Invoke(); // UI 업데이트 알림
@@ -195,6 +197,7 @@ public class QuestManager : MonoBehaviour
         {
             Debug.Log($"배달 완료! 보상: {quest.data.reward}");
             activeQuests.Remove(quest);
+            AudioManager.instance.PlaySFX("Challenge1");
             myData.DeliveryDone++;
             BadgeManager.Instance.CheckDeliverDone();
             if (myData.DeliveryDone >= 50 && !BadgeManager.Instance.IsBadgeUnlocked(30))
