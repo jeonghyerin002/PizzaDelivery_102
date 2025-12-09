@@ -174,6 +174,7 @@ public class QuestManager : MonoBehaviour
             {
                 finalDest = quest.Destination;
                 Debug.Log("긴급 퀘스트: 지정된 목적지로 설정됨.");
+                AudioManager.instance.PlaySFX("Phone");
             }
             else
             {

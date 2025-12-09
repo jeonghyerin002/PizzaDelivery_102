@@ -29,6 +29,17 @@ public class BadgeManager : MonoBehaviour
         }
     }
 
+    public void SetNotificationUI(GameObject panel, Image icon, TextMeshProUGUI name, TextMeshProUGUI desc)
+    {
+        this.badgeNotificationPanel = panel;
+        this.badgeIconUI = icon;
+        this.badgeNameUI = name;
+        this.badgeDescriptionUI = desc;
+
+        // 연결되자마자 혹시 켜져있을 수 있으니 꺼두기
+        if (badgeNotificationPanel != null)
+            badgeNotificationPanel.SetActive(false);
+    }
     public void UnlockBadge(int badgeID)
     {
         // ID에 해당하는 뱃지 데이터 찾기
