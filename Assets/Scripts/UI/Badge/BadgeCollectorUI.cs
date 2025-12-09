@@ -15,8 +15,20 @@ public class BadgeCollectorUI : MonoBehaviour
         UpdateCollectorUI();
     }
 
+    void Start()
+    {
+        // Start는 다른 스크립트들의 Awake가 끝난 뒤 실행되므로 더 안전함
+        UpdateCollectorUI();
+    }
+
     public void UpdateCollectorUI()
     {
+        if (BadgeManager.Instance == null)
+        {
+            Debug.LogWarning("BadgeManager가 아직 준비되지 않았습니다.");
+            return;
+        }
+
         // 기존에 생성된 슬롯들 삭제
         foreach (Transform child in contentParent)
         {
